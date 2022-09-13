@@ -11,27 +11,24 @@ import javax.annotation.PostConstruct;
 
 @SpringBootApplication
 public class GaschargeApplication {
-
-	@Autowired
-	MemberRepository memberRepository;
-
 	public static void main(String[] args) {
 		SpringApplication.run(GaschargeApplication.class, args);
-
-
 	}
 
-	@PostConstruct
-	public void init() {
-		String address1 = "address1";
-		String address2 = "address2";
-		String zipcode = "12345";
-		Address address = new Address(address1, address2, zipcode);
+//	@Autowired
+//	MemberRepository memberRepository;
 
-
-		String name = "test";
-		Member member = new Member(name, address);
-
-		memberRepository.save(member);
-	}
+//	@PostConstruct
+//	public void init() {
+//		String address1 = "address1";
+//		String address2 = "address2";
+//		String zipcode = "12345";
+//		Address address = new Address(address1, address2, zipcode);
+//
+//
+//		String name = "test";
+//		Member member = new Member(name, address);
+//
+//		memberRepository.save(member);
+//	}
 }

@@ -1,7 +1,6 @@
 package com.portfolio.gascharge.domain.member;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
