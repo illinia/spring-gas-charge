@@ -27,9 +27,12 @@ class MemberRepositoryTest {
         String zipcode = "memory";
         Address address = new Address(address1, address2, zipcode);
 
-
         String name = "test";
-        Member member = new Member(name, address);
+        String email = "email";
+        String picture = "picture";
+        Role role = Role.USER;
+
+        Member member = new Member(name, email, picture, role, address);
 
         memberRepository.save(member);
 
