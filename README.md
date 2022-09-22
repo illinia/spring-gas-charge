@@ -1,7 +1,13 @@
 
 
 ### 0.0 기본 기능 구현
+___
+#### 0.0.3 내역 (20 Sep 2022)
+1. 참고 https://www.callicoder.com/spring-boot-security-oauth2-social-login-part-1/
 
+#### 0.0.4 업데이트 예정
+1. 로그인 정보 저장하기 위한 JWT 어떻게 구현할지
+2. 로그인 관련 테스트는 어떻게 짤지
 ___
 #### 0.0.2 내역 (15 Sep 2022)
 1. 변경내역

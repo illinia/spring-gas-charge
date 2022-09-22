@@ -3,6 +3,7 @@ package com.portfolio.gascharge.oauth.handler;
 import com.portfolio.gascharge.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.portfolio.gascharge.utils.CookieUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import java.io.IOException;
 
 import static com.portfolio.gascharge.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
@@ -35,6 +37,8 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
                 .build().toUriString();
 
         authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
+
+        log.info("onAuthenticationFailure() targetUrl = {}", targetUrl);
 
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }

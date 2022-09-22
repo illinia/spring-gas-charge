@@ -9,6 +9,7 @@ import com.portfolio.gascharge.oauth.info.OAuth2UserInfo;
 import com.portfolio.gascharge.oauth.info.OAuth2UserInfoFactory;
 import com.portfolio.gascharge.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
@@ -27,6 +29,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        log.info("loadUser() userRequest = {}", userRequest.getAccessToken());
         OAuth2User user = super.loadUser(userRequest);
 
         try {
@@ -41,6 +44,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private OAuth2User process(OAuth2UserRequest userRequest, OAuth2User user) {
         ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
+        log.info("process user = {}", user);
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
         User savedUser = userRepository.findByUserId(userInfo.getId());
 
@@ -56,7 +60,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             savedUser = createUser(userInfo, providerType);
         }
 
-        return UserPrincipal.create(savedUser, user.getAttributes());
+        UserPrincipal userPrincipal = UserPrincipal.create(savedUser, user.getAttributes());
+        log.info("UserPrincipal = {}", userPrincipal);
+
+        return userPrincipal;
     }
 
     private User createUser(OAuth2UserInfo userInfo, ProviderType providerType) {

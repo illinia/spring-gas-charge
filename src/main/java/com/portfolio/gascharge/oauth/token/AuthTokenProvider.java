@@ -50,7 +50,9 @@ public class AuthTokenProvider {
             log.debug("claims subject := [{}]", claims.getSubject());
             User principal = new User(claims.getSubject(), "", authorities);
 
-            return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
+            log.info("AuthTokenProvider getAuthentication() = {}", principal.toString());
+
+            return new UsernamePasswordAuthenticationToken(principal, null, authorities);
         } else {
             throw new TokenValidFailedException();
         }
