@@ -34,4 +34,6 @@ public class QuartzJobConfiguration {
                     return RepeatStatus.FINISHED;
                 })).build();
     }
+
+
 }
