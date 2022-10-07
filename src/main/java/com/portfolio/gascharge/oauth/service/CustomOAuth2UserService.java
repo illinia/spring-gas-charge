@@ -1,10 +1,9 @@
 package com.portfolio.gascharge.oauth.service;
 
+import com.portfolio.gascharge.oauth.entity.AuthProvider;
 import com.portfolio.gascharge.domain.user.User;
-import com.portfolio.gascharge.oauth.entity.ProviderType;
-import com.portfolio.gascharge.oauth.entity.RoleType;
 import com.portfolio.gascharge.oauth.entity.UserPrincipal;
-import com.portfolio.gascharge.oauth.exception.OAuthProviderMissMatchException;
+import com.portfolio.gascharge.oauth.exception.OAuth2AuthenticationProcessingException;
 import com.portfolio.gascharge.oauth.info.OAuth2UserInfo;
 import com.portfolio.gascharge.oauth.info.OAuth2UserInfoFactory;
 import com.portfolio.gascharge.repository.user.UserRepository;
@@ -17,8 +16,9 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -42,56 +42,44 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
     }
 
-    private OAuth2User process(OAuth2UserRequest userRequest, OAuth2User user) {
-        ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
-        log.info("process user = {}", user);
-        OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        User savedUser = userRepository.findByUserId(userInfo.getId());
-
-        if (savedUser != null) {
-            if (providerType != savedUser.getProviderType()) {
-                throw new OAuthProviderMissMatchException(
-                        "Looks like you're signed up with " + providerType +
-                        " account. Please use your " + savedUser.getProviderType() + " account to login."
-                );
-            }
-            updateUser(savedUser, userInfo);
-        } else {
-            savedUser = createUser(userInfo, providerType);
+    private OAuth2User process(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
+        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
+        if (!StringUtils.hasText(oAuth2UserInfo.getEmail())) {
+            throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
-        UserPrincipal userPrincipal = UserPrincipal.create(savedUser, user.getAttributes());
-        log.info("UserPrincipal = {}", userPrincipal);
-
+        Optional<User> userOptional = userRepository.findByEmail(oAuth2UserInfo.getEmail());
+        User user;
+        if (userOptional.isPresent()) {
+            user = userOptional.get();
+            if (!user.getProvider().equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
+                throw new OAuth2AuthenticationProcessingException("Looks like you're signed up with " +
+                        user.getProvider() + " account. Please use your " + user.getProvider() +
+                        " account to login.");
+            }
+            user = updateExistingUser(user, oAuth2UserInfo);
+        } else {
+            user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
+        }
+        UserPrincipal userPrincipal = UserPrincipal.create(user, oAuth2User.getAttributes());
+        System.out.println("CustomOAuth2UserService process = " + userPrincipal);
         return userPrincipal;
     }
 
-    private User createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
-        LocalDateTime now = LocalDateTime.now();
-        User user = new User(
-                userInfo.getId(),
-                userInfo.getName(),
-                userInfo.getEmail(),
-                "Y",
-                userInfo.getImageUrl(),
-                providerType,
-                RoleType.USER,
-                now,
-                now
-        );
+    private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
+        User user = new User();
 
-        return userRepository.saveAndFlush(user);
+        user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
+        user.setProviderId(oAuth2UserInfo.getId());
+        user.setName(oAuth2UserInfo.getName());
+        user.setEmail(oAuth2UserInfo.getEmail());
+        user.setImageUrl(oAuth2UserInfo.getImageUrl());
+        return userRepository.save(user);
     }
 
-    private User updateUser(User user, OAuth2UserInfo userInfo) {
-        if (userInfo.getName() != null && !user.getUsername().equals(userInfo.getName())) {
-            user.setUsername(userInfo.getName());
-        }
-
-        if (userInfo.getImageUrl() != null && !user.getProfileImageUrl().equals(userInfo.getImageUrl())) {
-            user.setProfileImageUrl(userInfo.getImageUrl());
-        }
-
-        return user;
+    private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
+        existingUser.setName(oAuth2UserInfo.getName());
+        existingUser.setImageUrl(oAuth2UserInfo.getImageUrl());
+        return userRepository.save(existingUser);
     }
 }

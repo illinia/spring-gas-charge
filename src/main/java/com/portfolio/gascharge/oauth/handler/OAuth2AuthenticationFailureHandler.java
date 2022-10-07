@@ -1,7 +1,7 @@
 package com.portfolio.gascharge.oauth.handler;
 
-import com.portfolio.gascharge.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import com.portfolio.gascharge.utils.CookieUtil;
+import com.portfolio.gascharge.oauth.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.portfolio.gascharge.utils.CookieUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
@@ -15,18 +15,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.portfolio.gascharge.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+import static com.portfolio.gascharge.oauth.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
-    private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        String targetUrl = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+        String targetUrl = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue)
                 .orElse(("/"));
 
@@ -36,7 +36,7 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
                 .queryParam("error", exception.getLocalizedMessage())
                 .build().toUriString();
 
-        authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
+        httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
 
         log.info("onAuthenticationFailure() targetUrl = {}", targetUrl);
 

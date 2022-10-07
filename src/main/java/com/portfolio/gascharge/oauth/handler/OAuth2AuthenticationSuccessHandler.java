@@ -1,22 +1,13 @@
 package com.portfolio.gascharge.oauth.handler;
 
 import com.portfolio.gascharge.config.properties.AppProperties;
-import com.portfolio.gascharge.domain.user.UserRefreshToken;
-import com.portfolio.gascharge.oauth.entity.ProviderType;
-import com.portfolio.gascharge.oauth.entity.RoleType;
-import com.portfolio.gascharge.oauth.entity.UserPrincipal;
-import com.portfolio.gascharge.oauth.info.OAuth2UserInfo;
-import com.portfolio.gascharge.oauth.info.OAuth2UserInfoFactory;
-import com.portfolio.gascharge.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import com.portfolio.gascharge.oauth.token.AuthToken;
-import com.portfolio.gascharge.oauth.token.AuthTokenProvider;
-import com.portfolio.gascharge.repository.user.UserRefreshTokenRepository;
-import com.portfolio.gascharge.utils.CookieUtil;
+import com.portfolio.gascharge.oauth.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.portfolio.gascharge.oauth.exception.BadRequestException;
+import com.portfolio.gascharge.oauth.token.TokenProvider;
+import com.portfolio.gascharge.utils.CookieUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -27,31 +18,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Collection;
-import java.util.Date;
 import java.util.Optional;
 
-import static com.portfolio.gascharge.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
-import static com.portfolio.gascharge.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN;
+import static com.portfolio.gascharge.oauth.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-
-    private final AuthTokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
     private final AppProperties appProperties;
-    private final UserRefreshTokenRepository userRefreshTokenRepository;
-    private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String targetUrl = determineTargetUrl(request, response, authentication);
 
-        log.info("onAuthenticationSuccess() authentication = {}", authentication);
-
         if (response.isCommitted()) {
-            logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
+            log.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
         }
 
@@ -60,81 +45,39 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        Optional<String> redirectUri = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+        Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
 
+        log.info("redirectUri = {}", redirectUri);
+
         if (redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
-            log.info("redirectUri = {}", redirectUri);
-            throw new IllegalArgumentException("We've got an Unauthorized Redirect URI and can't proceed with the authentication");
+            throw new BadRequestException("We've got and Unauthorized Redirect URI and can't proceed with the authentication.");
         }
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
-        OAuth2AuthenticationToken authToken = (OAuth2AuthenticationToken) authentication;
-        ProviderType providerType = ProviderType.valueOf(authToken.getAuthorizedClientRegistrationId().toUpperCase());
-
-        UserPrincipal user = (UserPrincipal) authentication.getPrincipal();
-        OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        Collection<? extends GrantedAuthority> authorities = ((UserPrincipal) authentication.getPrincipal()).getAuthorities();
-
-        RoleType roleType = hasAuthority(authorities, RoleType.ADMIN.getCode()) ? RoleType.ADMIN : RoleType.USER;
-
-        Date now = new Date();
-        AuthToken accessToken = tokenProvider.createAuthToken(
-                userInfo.getId(),
-                roleType.getCode(),
-                new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
-        );
-
-        AuthToken refreshToken = tokenProvider.createAuthToken(
-                appProperties.getAuth().getTokenSecret(),
-                new Date(now.getTime() + appProperties.getAuth().getRefreshTokenExpiry())
-        );
-
-        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(userInfo.getId());
-
-        if (userRefreshToken != null) {
-            userRefreshToken.setRefreshToken(refreshToken.getToken());
-        } else {
-            userRefreshToken = new UserRefreshToken(userInfo.getId(), refreshToken.getToken());
-            userRefreshTokenRepository.saveAndFlush(userRefreshToken);
-        }
-
-        int cookieMaxAge = (int) appProperties.getAuth().getRefreshTokenExpiry() / 60;
-
-        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
-        CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
+        String token = tokenProvider.createToken(authentication);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("token", accessToken.getToken())
+                .queryParam("token", token)
                 .build().toUriString();
     }
 
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
         super.clearAuthenticationAttributes(request);
-        authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
-    }
-
-    private boolean hasAuthority(Collection<? extends GrantedAuthority> authorities, String authority) {
-        if (authorities == null) {
-            return false;
-        }
-
-        for (GrantedAuthority grantedAuthority : authorities) {
-            if (authority.equals(grantedAuthority.getAuthority())) {
-                return true;
-            }
-        }
-        return false;
+        httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
 
     private boolean isAuthorizedRedirectUri(String uri) {
         URI clientRedirectUri = URI.create(uri);
 
+        log.info("appProperties.getOAuth2() = {}", appProperties.getOAuth2().getAuthorizedRedirectUris());
+
         return appProperties.getOAuth2().getAuthorizedRedirectUris()
                 .stream()
-                .anyMatch(authorizedRedirectUri -> {
-                    URI authorizedURI = URI.create(authorizedRedirectUri);
+                .anyMatch(authorizedRedirectURi -> {
+                    log.info("authorizedRedirectURi = {}", authorizedRedirectURi);
+                    URI authorizedURI = URI.create(authorizedRedirectURi);
                     if (authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
                             && authorizedURI.getPort() == clientRedirectUri.getPort()) {
                         return true;
@@ -142,5 +85,4 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     return false;
                 });
     }
-
 }
