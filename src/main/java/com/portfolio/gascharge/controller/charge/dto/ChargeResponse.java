@@ -1,5 +1,6 @@
 package com.portfolio.gascharge.controller.charge.dto;
 
+import com.portfolio.gascharge.domain.charge.Charge;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,5 +22,14 @@ public class ChargeResponse {
         this.name = name;
         this.totalCount = totalCount;
         this.currentCount = currentCount;
+    }
+
+    public static ChargeResponse toResponseDto(Charge charge) {
+        return ChargeResponse.builder()
+                .id(charge.getId())
+                .name(charge.getName())
+                .totalCount(charge.getTotalCount())
+                .currentCount(charge.getCurrentCount())
+                .build();
     }
 }

@@ -4,8 +4,24 @@
 ___
 #### 0.0.5 내역 (09 Oct 2022)
 1. 배치 스케줄링해서 충전소 데이터 받아오는 기능 완성
+2. 충전소 검색 기능 추가
+   1. 전체 검색 Page<Charge>
+   2. 이름 검색
+      1. GET “/charge” name={name}
+   3. 가맹, 비가맹 구분 파라미터
+      1. GET “/charge”
+      2. is-membership=membership or not-membership
+   4. 정렬
+      1. GET “/charge”
+      2. sort=value,desc
+   5. 페이징
+      1. GET “/charge”
+      2. size=1 2 3 4 page=10 20 30
+   6. 충전소 id 값으로 검색 Charge
+      1. GET “/charge/{id}”
 #### 0.0.6 업데이트 예정
-1. 
+1. 검색 결과 dto 로 변환해서 응답
+2. 예약 기능 추가
 ___
 #### 0.0.4 내역 (07 Oct 2022)
 1. 스프링 시큐리티에 대한 테스트는 잠시 뒤로 미루기로 함(Jwt 와 Oauth2 로그인을 같이 테스트하기에는 공부가 부족하다 느낌)

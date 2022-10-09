@@ -1,19 +1,18 @@
 package com.portfolio.gascharge.domain.charge;
 
 import com.portfolio.gascharge.domain.BaseTimeEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.portfolio.gascharge.enums.charge.ChargePlaceMembership;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter
 @Entity
 @NoArgsConstructor
 @ToString
+@DynamicInsert
 public class Charge extends BaseTimeEntity {
 
     @Id
@@ -27,6 +26,12 @@ public class Charge extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Long currentCount;
+
+    @Setter
+    @Column(name = "membership")
+    @ColumnDefault(value = "'NOT_MEMBERSHIP'")
+    @Enumerated(EnumType.STRING)
+    private ChargePlaceMembership membership;
 
     @Builder
     public Charge(String id, String name, Long totalCount, Long currentCount) {

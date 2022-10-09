@@ -3,6 +3,7 @@ package com.portfolio.gascharge.batch.quartz;
 import com.portfolio.gascharge.batch.api.ChargeApi;
 import com.portfolio.gascharge.batch.api.ChargeApiDto;
 import com.portfolio.gascharge.domain.charge.Charge;
+import com.portfolio.gascharge.enums.charge.ChargePlaceMembership;
 import com.portfolio.gascharge.repository.charge.ChargeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
 import org.springframework.batch.item.support.ListItemReader;
+import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +43,7 @@ public class ChargeInfoJobConfig {
         return jobBuilderFactory.get("saveChargeDataFromApiJob")
                 .incrementer(new RunIdIncrementer())
                 .start(saveChargeDataFromApi())
+                .next(changeMembershipTest())
                 .build();
     }
 
@@ -73,7 +76,7 @@ public class ChargeInfoJobConfig {
     @Bean
     public ItemProcessor<ChargeApiDto, Charge> processor() {
         return item -> {
-            log.info(item.toString() + " 배치 프로세스 진행중...");
+            log.info(" 배치 프로세스 진행중...");
 
             Optional<Charge> byId = chargeRepository.findById(item.getId());
 
@@ -95,5 +98,15 @@ public class ChargeInfoJobConfig {
                 .build();
 
         return build;
+    }
+
+    @Bean
+    public Step changeMembershipTest() {
+        return this.stepBuilderFactory.get("changeMembershipTest step")
+                .tasklet((contribution, chunkContext) -> {
+                    chargeRepository.findByName("오곡").forEach(e -> e.setMembership(ChargePlaceMembership.MEMBERSHIP));
+                    chargeRepository.findByName("국회").forEach(e -> e.setMembership(ChargePlaceMembership.MEMBERSHIP));
+                    return RepeatStatus.FINISHED;
+               }).build();
     }
 }
