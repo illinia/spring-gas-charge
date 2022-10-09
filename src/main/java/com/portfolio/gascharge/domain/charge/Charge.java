@@ -1,31 +1,42 @@
 package com.portfolio.gascharge.domain.charge;
 
-import lombok.AllArgsConstructor;
+import com.portfolio.gascharge.domain.BaseTimeEntity;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
+@Getter
 @Entity
 @NoArgsConstructor
-public class Charge {
+@ToString
+public class Charge extends BaseTimeEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private String id;
 
     @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
-    private Integer totalCount;
+    private Long totalCount;
 
     @Column(nullable = false)
-    private Integer currentCount;
+    private Long currentCount;
 
     @Builder
-    public Charge(String id, String name, Integer totalCount, Integer currentCount) {
+    public Charge(String id, String name, Long totalCount, Long currentCount) {
         this.id = id;
         this.name = name;
+        this.totalCount = totalCount;
+        this.currentCount = currentCount;
+    }
+
+    public void update(Long totalCount, Long currentCount) {
         this.totalCount = totalCount;
         this.currentCount = currentCount;
     }

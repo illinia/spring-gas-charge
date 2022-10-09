@@ -1,7 +1,7 @@
 package com.portfolio.gascharge.oauth.service;
 
-import com.portfolio.gascharge.oauth.entity.AuthProvider;
 import com.portfolio.gascharge.domain.user.User;
+import com.portfolio.gascharge.oauth.entity.AuthProvider;
 import com.portfolio.gascharge.oauth.entity.UserPrincipal;
 import com.portfolio.gascharge.oauth.exception.OAuth2AuthenticationProcessingException;
 import com.portfolio.gascharge.oauth.info.OAuth2UserInfo;
