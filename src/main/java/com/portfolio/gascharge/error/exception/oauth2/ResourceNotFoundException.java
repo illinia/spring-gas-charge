@@ -1,4 +1,4 @@
-package com.portfolio.gascharge.oauth.exception;
+package com.portfolio.gascharge.error.exception.oauth2;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

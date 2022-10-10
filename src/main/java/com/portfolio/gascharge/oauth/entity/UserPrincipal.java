@@ -1,6 +1,7 @@
 package com.portfolio.gascharge.oauth.entity;
 
 import com.portfolio.gascharge.domain.user.User;
+import com.portfolio.gascharge.enums.user.UserAuthority;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,10 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 @AllArgsConstructor
@@ -34,7 +32,9 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     }
 
     public static UserPrincipal create(User user) {
-        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+        UserAuthority userAuthority = Objects.isNull(user.getUserAuthority()) ? UserAuthority.ROLE_USER : user.getUserAuthority();
+
+        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(userAuthority.toString()));
 
         return new UserPrincipal(
                 user.getId(),

@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class ChargeResponse {
+public class SearchChargeResponseDto {
 
     private String id;
     private String name;
@@ -17,15 +17,15 @@ public class ChargeResponse {
     private Long currentCount;
 
     @Builder
-    public ChargeResponse(String id, String name, Long totalCount, Long currentCount) {
+    public SearchChargeResponseDto(String id, String name, Long totalCount, Long currentCount) {
         this.id = id;
         this.name = name;
         this.totalCount = totalCount;
         this.currentCount = currentCount;
     }
 
-    public static ChargeResponse toResponseDto(Charge charge) {
-        return ChargeResponse.builder()
+    public static SearchChargeResponseDto toResponseDto(Charge charge) {
+        return SearchChargeResponseDto.builder()
                 .id(charge.getId())
                 .name(charge.getName())
                 .totalCount(charge.getTotalCount())

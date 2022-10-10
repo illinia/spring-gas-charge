@@ -1,4 +1,4 @@
-package com.portfolio.gascharge.oauth.exception;
+package com.portfolio.gascharge.error.exception.oauth2;
 
 import org.springframework.security.core.AuthenticationException;
 

@@ -5,6 +5,7 @@ import com.portfolio.gascharge.domain.charge.search.ChargeStatus;
 import com.portfolio.gascharge.enums.charge.ChargePlaceMembership;
 import com.portfolio.gascharge.repository.charge.ChargeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,9 +25,14 @@ public class ChargeService {
         return chargeRepository.findById(id);
     }
 
-    public String saveCharge(Charge charge) {
-        Charge save = chargeRepository.save(charge);
-        return save.getId();
+    public Charge saveCharge(Charge charge) {
+        Optional<Charge> byId = chargeRepository.findById(charge.getId());
+
+        if (byId.isPresent()) {
+            throw new DuplicateKeyException("Charge id is duplicated. id is " + charge.getId());
+        } else {
+            return chargeRepository.save(charge);
+        }
     }
 
     public Page<Charge> findAll(Pageable pageable) {
