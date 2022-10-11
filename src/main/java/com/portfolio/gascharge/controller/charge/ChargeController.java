@@ -31,12 +31,11 @@ public class ChargeController {
     private final ChargeService chargeService;
 
     @GetMapping("/{id}")
-    public ResponseEntity findById(@PathVariable String id) {
-        Optional<Charge> byId = chargeService.findById(id);
+    public ResponseEntity getChargeByChargePlaceId(@PathVariable String id) {
+        Optional<Charge> byId = chargeService.findByChargePlaceId(id);
 
         if (byId.isEmpty()) {
             throw new RestApiException(CommonErrorCode.RESOURCE_NOT_FOUND);
-//            return new ResponseEntity(null,null, HttpStatus.NOT_FOUND);
         }
 
         Charge charge = byId.get();
@@ -52,7 +51,7 @@ public class ChargeController {
             @RequestParam(value = "is-membership", required = false) String isMembership,
             Pageable pageable
     ) {
-        log.info(pageable + name + isMembership);
+        log.info("getChargeList request : pageable = {}, name = {}, isMembership = {}",pageable, name, isMembership);
 
         Page<Charge> all = null;
 

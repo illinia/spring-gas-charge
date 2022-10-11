@@ -52,7 +52,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({Exception.class})
     public ResponseEntity handleAllException(Exception ex) {
         ErrorCode errorCode = CommonErrorCode.INTERNAL_SERVER_ERROR;
-        return handleExceptionInternal(errorCode);
+        return handleExceptionInternal(errorCode, ex.getMessage());
     }
 
     private ResponseEntity handleExceptionInternal(ErrorCode errorCode) {

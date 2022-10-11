@@ -1,5 +1,6 @@
 package com.portfolio.gascharge.batch.quartz;
 
+import com.portfolio.gascharge.batch.ChargeInfoJobConfig;
 import lombok.RequiredArgsConstructor;
 import org.quartz.JobExecutionContext;
 import org.springframework.batch.core.Job;

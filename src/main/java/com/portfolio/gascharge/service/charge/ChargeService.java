@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,12 +20,14 @@ public class ChargeService {
 
     private final ChargeRepository chargeRepository;
 
-    public Optional<Charge> findById(String id) {
-        return chargeRepository.findById(id);
+    public Optional<Charge> findByChargePlaceId(String id) {
+        return chargeRepository.findByChargePlaceId(id);
     }
 
     public Charge saveCharge(Charge charge) {
-        Optional<Charge> byId = chargeRepository.findById(charge.getId());
+        Optional<Charge> byId = chargeRepository.findByChargePlaceId(charge.getChargePlaceId());
+
+        System.out.println(byId);
 
         if (byId.isPresent()) {
             throw new DuplicateKeyException("Charge id is duplicated. id is " + charge.getId());

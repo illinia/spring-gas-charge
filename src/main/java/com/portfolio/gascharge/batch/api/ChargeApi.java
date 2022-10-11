@@ -46,7 +46,7 @@ public class ChargeApi {
             JSONObject object = (JSONObject) o;
 
             ChargeApiDto charge = ChargeApiDto.builder()
-                    .id((String) object.get("chrstn_mno"))
+                    .chargePlaceId((String) object.get("chrstn_mno"))
                     .name((String) object.get("chrstn_nm"))
                     .totalCount((Long) object.get("prfect_elctc_posbl_alge"))
                     .currentCount((Long) object.get("wait_vhcle_alge"))

@@ -8,8 +8,8 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class PostChargeRequestDto {
 
-    @NotBlank(message = "id is mandatory")
-    private String id;
+    @NotBlank(message = "chargePlaceId is mandatory")
+    private String chargePlaceId;
     @NotBlank(message = "name is mandatory")
     private String name;
     @NotBlank(message = "totalCount is mandatory")
@@ -19,7 +19,7 @@ public class PostChargeRequestDto {
 
     public Charge toEntity() {
         return Charge.builder()
-                .id(this.id)
+                .chargePlaceId(this.chargePlaceId)
                 .name(this.name)
                 .totalCount(this.totalCount)
                 .currentCount(this.currentCount)

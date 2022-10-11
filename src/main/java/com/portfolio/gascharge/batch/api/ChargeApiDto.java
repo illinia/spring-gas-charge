@@ -11,14 +11,14 @@ import lombok.ToString;
 @ToString
 public class ChargeApiDto {
 
-    private String id;
+    private String chargePlaceId;
     private String name;
     private Long totalCount;
     private Long currentCount;
 
     @Builder
-    public ChargeApiDto(String id, String name, Long totalCount, Long currentCount) {
-        this.id = id;
+    public ChargeApiDto(String chargePlaceId, String name, Long totalCount, Long currentCount) {
+        this.chargePlaceId = chargePlaceId;
         this.name = name;
         this.totalCount = totalCount;
         this.currentCount = currentCount;
@@ -26,7 +26,7 @@ public class ChargeApiDto {
 
     public Charge toEntity() {
         return Charge.builder()
-                .id(this.id)
+                .chargePlaceId(this.chargePlaceId)
                 .name(this.name)
                 .totalCount(this.totalCount)
                 .currentCount(this.currentCount)

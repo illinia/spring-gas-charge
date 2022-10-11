@@ -1,4 +1,4 @@
-package com.portfolio.gascharge.batch.quartz;
+package com.portfolio.gascharge.batch;
 
 import com.portfolio.gascharge.batch.api.ChargeApi;
 import com.portfolio.gascharge.batch.api.ChargeApiDto;
@@ -78,7 +78,7 @@ public class ChargeInfoJobConfig {
         return item -> {
             log.info(" 배치 프로세스 진행중...");
 
-            Optional<Charge> byId = chargeRepository.findById(item.getId());
+            Optional<Charge> byId = chargeRepository.findByChargePlaceId(item.getChargePlaceId());
 
             if (byId.isEmpty()) {
                 return item.toEntity();
@@ -92,12 +92,10 @@ public class ChargeInfoJobConfig {
 
     @Bean
     public JpaItemWriter<Charge> writer() {
-        JpaItemWriter<Charge> build = new JpaItemWriterBuilder<Charge>()
+        return new JpaItemWriterBuilder<Charge>()
                 .entityManagerFactory(emf)
                 .usePersist(true)
                 .build();
-
-        return build;
     }
 
     @Bean

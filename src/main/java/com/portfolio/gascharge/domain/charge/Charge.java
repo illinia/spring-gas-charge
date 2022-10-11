@@ -15,8 +15,11 @@ import javax.persistence.*;
 @DynamicInsert
 public class Charge extends BaseTimeEntity {
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
+
+    @Column(nullable = false)
+    private String chargePlaceId;
 
     @Column(nullable = false)
     private String name;
@@ -34,8 +37,9 @@ public class Charge extends BaseTimeEntity {
     private ChargePlaceMembership membership;
 
     @Builder
-    public Charge(String id, String name, Long totalCount, Long currentCount) {
+    public Charge(String id, String chargePlaceId, String name, Long totalCount, Long currentCount) {
         this.id = id;
+        this.chargePlaceId = chargePlaceId;
         this.name = name;
         this.totalCount = totalCount;
         this.currentCount = currentCount;
