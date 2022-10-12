@@ -1,9 +1,9 @@
-package com.portfolio.gascharge.config;
+package com.portfolio.gascharge.config.swagger;
 
 import com.fasterxml.classmate.TypeResolver;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
+import com.portfolio.gascharge.config.swagger.alternateType.CustomPageable;
+import com.portfolio.gascharge.config.swagger.alternateType.CustomUserPrinciple;
+import com.portfolio.gascharge.oauth.entity.UserPrincipal;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +31,7 @@ import java.util.List;
 @EnableSwagger2
 public class SwaggerConfig extends WebMvcConfigurationSupport {
 
+
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("수소 충전소 현황 조회/예약 시스템")
@@ -38,26 +39,15 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
                 .build();
     }
 
-    @Data
-    @ApiModel
-    static class MyPageable {
-        @ApiModelProperty(value = "페이지 번호")
-        private Integer page;
-
-        @ApiModelProperty(value = "페이지 크기")
-        private Integer size;
-
-        @ApiModelProperty(value = "정렬(컬럼명,ASC|DESC)")
-        private List<String> sort;
-    }
-
     @Bean
     public Docket commonApi() {
         TypeResolver typeResolver = new TypeResolver();
 
         return new Docket(DocumentationType.SWAGGER_2)
-                .alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Pageable.class),
-                        typeResolver.resolve(MyPageable.class)))
+                .alternateTypeRules(
+                        AlternateTypeRules.newRule(typeResolver.resolve(Pageable.class), typeResolver.resolve(CustomPageable.class))
+//                        AlternateTypeRules.newRule(typeResolver.resolve(UserPrincipal.class), typeResolver.resolve(CustomUserPrinciple.class))
+                )
                 .apiInfo(this.apiInfo())
                 .securityContexts(Arrays.asList(securityContext()))
                 .securitySchemes(Arrays.asList(apiKey()))

@@ -1,5 +1,6 @@
 package com.portfolio.gascharge.oauth.filter;
 
+import com.portfolio.gascharge.oauth.entity.UserPrincipal;
 import com.portfolio.gascharge.oauth.service.CustomUserDetailsService;
 import com.portfolio.gascharge.oauth.token.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 Long userId = tokenProvider.getUserIdFromToken(jwt);
 
-                UserDetails userDetails = customUserDetailsService.loadUserById(userId);
+                UserPrincipal userDetails = customUserDetailsService.loadUserById(userId);
+                log.info("TokenAuthenticationFilter userPrincipal id = {}", userDetails.getId());
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
