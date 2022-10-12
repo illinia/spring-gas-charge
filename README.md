@@ -2,6 +2,16 @@
 
 ### 0.0 기본 기능 구현
 ___
+#### 0.0.7 버그 픽스 (12 Oct 2022)
+1. 컨트롤러에서 @AuthenticationPrincipal 에서 객체 못 받아오는 버그 수정
+   1. 스웨거 설정 위해 SwaggerConfig 에서 WebMvcConfigurationSupport 를 상속 받아 설정 했는데
+   2. 스프링 부트에서 기본적으로 설정한 것들이 적용이 안 되었음.
+   3. 해결 방법
+      1. WebMvcConfigurationSupport 상속을 안 받는다.
+      2. WebMvcConfigurationSupport 상속이 필요한 경우 
+      addArgumentResolvers(List<handlerMethodArgumentResolver> argumentResolvers)
+      메서드를 오버라이딩해서 AuthenticationPrincipalArgumentResolver 클래스를 추가해준다.
+___
 #### 0.0.6 내역 (11 Oct 2022)
 1. 충전소 정보 properties 만들고 pojo 로 사용하게 수정
 2. 컨트롤러 전역 에러처리 추가

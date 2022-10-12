@@ -52,6 +52,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({Exception.class})
     public ResponseEntity handleAllException(Exception ex) {
         ErrorCode errorCode = CommonErrorCode.INTERNAL_SERVER_ERROR;
+        log.error("handleAllException = ", ex);
         return handleExceptionInternal(errorCode, ex.getMessage());
     }
 
@@ -61,7 +62,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private ErrorResponse makeErrorResponse(ErrorCode errorCode) {
-        System.out.println("makeErrorResponse");
+        log.error("makeErrorResponse = ", errorCode);
         return ErrorResponse.builder()
                 .code(errorCode.name())
                 .message(errorCode.getMessage())
@@ -74,6 +75,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private ErrorResponse makeErrorResponse(ErrorCode errorCode, String message) {
+        log.error("makeErrorResponse = ",errorCode, message);
         return ErrorResponse.builder()
                 .code(errorCode.name())
                 .message(message)
@@ -86,6 +88,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private ErrorResponse makeErrorResponse(BindException e, ErrorCode errorCode) {
+        log.error("makeErrorResponse = ",errorCode);
         List<ErrorResponse.ValidationError> validationErrorList = e.getBindingResult()
                 .getFieldErrors()
                 .stream()

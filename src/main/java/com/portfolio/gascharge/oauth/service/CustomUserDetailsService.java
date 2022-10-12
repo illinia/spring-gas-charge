@@ -20,7 +20,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         log.info("loadUserByUsername email = {}", email);
@@ -31,8 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return UserPrincipal.create(user);
     }
 
-    @Transactional
-    public UserDetails loadUserById(Long id) {
+    public UserPrincipal loadUserById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
         return UserPrincipal.create(user);
     }
