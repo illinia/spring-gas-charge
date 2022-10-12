@@ -1,7 +1,7 @@
 package com.portfolio.gascharge.oauth.info;
 
-import com.portfolio.gascharge.oauth.entity.AuthProvider;
 import com.portfolio.gascharge.error.exception.oauth2.OAuth2AuthenticationProcessingException;
+import com.portfolio.gascharge.oauth.entity.AuthProvider;
 import com.portfolio.gascharge.oauth.info.impl.GoogleOAuth2UserInfo;
 import com.portfolio.gascharge.oauth.info.impl.KakaoOAuth2UserInfo;
 import com.portfolio.gascharge.oauth.info.impl.NaverOAuth2UserInfo;

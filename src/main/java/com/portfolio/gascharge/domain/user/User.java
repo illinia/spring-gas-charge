@@ -3,7 +3,7 @@ package com.portfolio.gascharge.domain.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.portfolio.gascharge.enums.user.UserAuthority;
 import com.portfolio.gascharge.oauth.entity.AuthProvider;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "USER", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
@@ -51,4 +50,16 @@ public class User {
     @Enumerated(EnumType.STRING)
     @ColumnDefault(value = "'ROLE_USER'")
     private UserAuthority userAuthority;
+
+    @Builder
+    public User(String name, String email, String imageUrl, Boolean emailVerified, String password, AuthProvider provider, String providerId, UserAuthority userAuthority) {
+        this.name = name;
+        this.email = email;
+        this.imageUrl = imageUrl;
+        this.emailVerified = emailVerified;
+        this.password = password;
+        this.provider = provider;
+        this.providerId = providerId;
+        this.userAuthority = userAuthority;
+    }
 }

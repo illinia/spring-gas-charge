@@ -24,15 +24,12 @@ import java.util.List;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-
-
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("수소 충전소 현황 조회/예약 시스템")
                 .description("전 회사에서 앱 프론트 개발자로서 실제로 개발하고 배포중인 앱에서 백엔드 부분을 구현한 프로젝트입니다.")
                 .build();
     }
-
     @Bean
     public Docket commonApi() {
         TypeResolver typeResolver = new TypeResolver();

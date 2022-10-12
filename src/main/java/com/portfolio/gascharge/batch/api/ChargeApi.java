@@ -1,7 +1,6 @@
 package com.portfolio.gascharge.batch.api;
 
 import com.portfolio.gascharge.config.properties.ChargeProperties;
-import com.portfolio.gascharge.domain.charge.Charge;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -17,7 +16,6 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor

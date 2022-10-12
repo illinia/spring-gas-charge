@@ -100,7 +100,7 @@ public class ChargeInfoJobConfig {
 
     @Bean
     public Step changeMembershipTest() {
-        return this.stepBuilderFactory.get("changeMembershipTest step")
+        return this.stepBuilderFactory.get("changeMembership step")
                 .tasklet((contribution, chunkContext) -> {
                     chargeRepository.findByName("오곡").forEach(e -> e.setMembership(ChargePlaceMembership.MEMBERSHIP));
                     chargeRepository.findByName("국회").forEach(e -> e.setMembership(ChargePlaceMembership.MEMBERSHIP));

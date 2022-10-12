@@ -21,13 +21,20 @@ public class TokenProvider {
     public String createToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpiry());
 
+        String id = Long.toString(userPrincipal.getId());
+        Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpiry());
+        String tokenSecret = appProperties.getAuth().getTokenSecret();
+
+        return jwtTokenBuild(id, expiryDate, tokenSecret);
+    }
+
+    public String jwtTokenBuild(String id, Date expiryDate, String tokenSecret) {
         return Jwts.builder()
-                .setSubject(Long.toString(userPrincipal.getId()))
+                .setSubject(id)
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret())
+                .signWith(SignatureAlgorithm.HS512, tokenSecret)
                 .compact();
     }
 
@@ -56,5 +63,9 @@ public class TokenProvider {
         }
 
         return false;
+    }
+
+    public Date getLongExpiryDay() {
+        return new Date(new Date().getTime() + 123456789);
     }
 }

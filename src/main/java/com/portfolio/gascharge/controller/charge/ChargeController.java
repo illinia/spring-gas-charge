@@ -1,15 +1,14 @@
 package com.portfolio.gascharge.controller.charge;
 
+import com.portfolio.gascharge.controller.charge.dto.PatchChargeRequestDto;
 import com.portfolio.gascharge.controller.charge.dto.PostChargeRequestDto;
 import com.portfolio.gascharge.controller.charge.dto.SearchChargeResponseDto;
 import com.portfolio.gascharge.domain.charge.Charge;
 import com.portfolio.gascharge.enums.charge.ChargePlaceMembership;
-import com.portfolio.gascharge.error.errorcode.CommonErrorCode;
-import com.portfolio.gascharge.error.exception.web.RestApiException;
 import com.portfolio.gascharge.service.charge.ChargeService;
+import com.portfolio.gascharge.utils.web.DtoFieldSpreader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -32,13 +31,7 @@ public class ChargeController {
 
     @GetMapping("/{id}")
     public ResponseEntity getChargeByChargePlaceId(@PathVariable String id) {
-        Optional<Charge> byId = chargeService.findByChargePlaceId(id);
-
-        if (byId.isEmpty()) {
-            throw new RestApiException(CommonErrorCode.RESOURCE_NOT_FOUND);
-        }
-
-        Charge charge = byId.get();
+        Charge charge = chargeService.findByChargePlaceId(id);
 
         SearchChargeResponseDto searchChargeResponseDto = SearchChargeResponseDto.toResponseDto(charge);
 
@@ -49,19 +42,11 @@ public class ChargeController {
     public ResponseEntity getChargeList(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "is-membership", required = false) String isMembership,
-            Pageable pageable
-    ) {
-        log.info("getChargeList request : pageable = {}, name = {}, isMembership = {}",pageable, name, isMembership);
+            Pageable pageable) {
+        log.info("getChargeList request : pageable = {}, name = {}, isMembership = {}", pageable, name, isMembership);
 
-        Page<Charge> all = null;
-
-        if (name == null && isMembership == null && pageable == null) {
-            all = chargeService.findAll(null);
-        } else {
-            all = chargeService.findAll(name, ChargePlaceMembership.getChargePlaceMembership(isMembership), pageable);
-        }
-
-        List<SearchChargeResponseDto> collect = all.getContent().stream().map(c -> SearchChargeResponseDto.toResponseDto(c)).collect(Collectors.toList());
+        List<SearchChargeResponseDto> collect = chargeService.findAll(name, ChargePlaceMembership.getChargePlaceMembership(isMembership), pageable)
+                .getContent().stream().map(SearchChargeResponseDto::toResponseDto).collect(Collectors.toList());
 
         Page<SearchChargeResponseDto> result = new PageImpl<>(collect, pageable, collect.size());
 
@@ -69,18 +54,28 @@ public class ChargeController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity addCharge(
-            @RequestBody PostChargeRequestDto request) {
-        try {
-            Charge charge = chargeService.saveCharge(request.toEntity());
-            return new ResponseEntity(SearchChargeResponseDto.toResponseDto(charge), null, HttpStatus.CREATED);
-        } catch (DuplicateKeyException e) {
-            log.error("addCharge method has error about duplicated id when create new charge entity : ", e);
-            throw new RestApiException(CommonErrorCode.RESOURCE_CONFLICT);
-        } catch (Exception e) {
-            log.error("addCharge method has error : ", e);
-            throw new RestApiException(CommonErrorCode.INTERNAL_SERVER_ERROR);
-        }
+            @RequestBody PostChargeRequestDto postChargeRequestDto) {
+        Charge charge = chargeService.saveCharge(postChargeRequestDto.toEntity());
+        return new ResponseEntity(SearchChargeResponseDto.toResponseDto(charge), null, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity updateCharge(
+            @RequestBody PatchChargeRequestDto patchChargeRequestDto) {
+        Map<String, Object> attributesMap = DtoFieldSpreader.of(patchChargeRequestDto);
+
+        Charge charge = chargeService.updateDynamicField(patchChargeRequestDto.getChargePlaceId(), attributesMap);
+
+        return new ResponseEntity(SearchChargeResponseDto.toResponseDto(charge), null, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{chargePlaceId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String deleteCharge(
+            @PathVariable String chargePlaceId) {
+        return chargeService.deleteCharge(chargePlaceId);
     }
 }

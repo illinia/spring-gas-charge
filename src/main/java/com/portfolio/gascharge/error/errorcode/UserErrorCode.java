@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum UserErrorCode implements ErrorCode {
 
-    INACTIVE_USER(HttpStatus.FORBIDDEN, "User is inactive"),
+    INACTIVE_USER(HttpStatus.FORBIDDEN, "권한이 없습니다."),
     ;
 
     private final HttpStatus httpStatus;

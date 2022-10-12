@@ -2,6 +2,27 @@
 
 ### 0.0 기본 기능 구현
 ___
+#### 0.0.7 내역 (12 Oct 2022)
+1. 스웨거 테스트용 계정 생성, 부트 실행시 jwt 토큰값 콘솔창에서 출력
+2. 권한 없을때 던져지는 AccessDeniedException 도 전역 예외 핸들러에서 처리
+   1. Exception 핸들러에서 잡아서 500 에러로 던져지는 이슈 있었음
+   2. 현재는 403 재대로 던져짐
+3. 충전소 수정 기능 추가
+   1. PATCH “/charge” 권한 ADMIN
+   2. PatchChargeRequestDto requestBody
+   3. SearchChargeResponseDto responseBody
+4. 충전소 삭제 기능 추가
+   1. DELETE “/charge/chargePlaceId” 권한 ADMIN
+   2. String chargePlaceId request
+   3. String 삭제 완료 문구 반환 response
+5. 예외 처리 기준 변경
+   1. 서비스에서 예외 던지게 변경
+   2. 예를 들면 검색시 결과가 없을때 NoResultException 던지게 변경
+#### 0.0.8 업데이트 예정
+1. 예약 엔티티 제작, 매핑 설계
+2. 예약 crud
+3. 일정 시간마다 예약 시간 지나서 충전 완료가 안 되었을 시 예약 노쇼상태로 변경하는 배치 기능 추가
+___
 #### 0.0.7 버그 픽스 (12 Oct 2022)
 1. 컨트롤러에서 @AuthenticationPrincipal 에서 객체 못 받아오는 버그 수정
    1. 스웨거 설정 위해 SwaggerConfig 에서 WebMvcConfigurationSupport 를 상속 받아 설정 했는데
@@ -17,15 +38,15 @@ ___
 2. 컨트롤러 전역 에러처리 추가
 3. 충전소 id 값 대리키로 변경
 4. 충전소 create 기능 추가
-   1. POST "/charge"
-   2. PostChargeRequestDto 로 값 받기
+   1. POST "/charge" 권한 ADMIN
+   2. PostChargeRequestDto requestBody
    3. 인증된 사용자만 호출할수 있게 메서드사전호출 추가
 5. 스웨거 기능 추가
    1. oauth2 jwt 필요한 경우 헤더에 추가할 수 있게 기능 추가
    2. 스프링 데이터 Pageable 필드값들 스웨거에서 수정할 수 있게 추가
 #### 0.0.7 업데이트 예정
 1. 예약 기능은 나중에
-2. 충전소 crud 마무리
+2. ~~충전소 crud 마무리~~
 ___
 #### 0.0.5 내역 (09 Oct 2022)
 1. 배치 스케줄링해서 충전소 데이터 받아오는 기능 완성
@@ -45,16 +66,16 @@ ___
    6. 충전소 id 값으로 검색 Charge
       1. GET “/charge/{id}”
 #### 0.0.6 업데이트 예정
-1. 검색 결과 dto 로 변환해서 응답
+1. ~~검색 결과 dto 로 변환해서 응답~~
 2. 예약 기능 추가
-3. 충전소 정보 properties 만들고 pojo 로 사용하게 수정
+3. ~~충전소 정보 properties 만들고 pojo 로 사용하게 수정~~
 ___
 #### 0.0.4 내역 (07 Oct 2022)
 1. 스프링 시큐리티에 대한 테스트는 잠시 뒤로 미루기로 함(Jwt 와 Oauth2 로그인을 같이 테스트하기에는 공부가 부족하다 느낌)
 2. 스프링 배치 세팅
 3. 충전소 엔티티 제작
 #### 0.0.5 업데이트 예정
-1. 충전소 데이터 쿼츠로 스케줄링 하고 스프링 배치 이용해서 저장하기
+1. ~~충전소 데이터 쿼츠로 스케줄링 하고 스프링 배치 이용해서 저장하기~~
 ___
 #### 0.0.3 내역 (20 Sep 2022)
 1. 참고 https://www.callicoder.com/spring-boot-security-oauth2-social-login-part-1/
@@ -79,8 +100,8 @@ ___
    4. 로그아웃 추가
 
 #### 0.0.3 업데이트 예정
-1. 로그인 정보 저장하기 위한 JWT 어떻게 구현할지
-2. 로그인 관련 테스트는 어떻게 짤지
+1. ~~로그인 정보 저장하기 위한 JWT 어떻게 구현할지~~
+2. ~~로그인 관련 테스트는 어떻게 짤지~~
 ___
 #### 0.0.1 내역 (13 Sep 2022)
 1. h2 DB 연결

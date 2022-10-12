@@ -11,14 +11,14 @@ import lombok.ToString;
 @ToString
 public class SearchChargeResponseDto {
 
-    private String id;
+    private String chargePlaceId;
     private String name;
     private Long totalCount;
     private Long currentCount;
 
     @Builder
-    public SearchChargeResponseDto(String id, String name, Long totalCount, Long currentCount) {
-        this.id = id;
+    public SearchChargeResponseDto(String chargePlaceId, String name, Long totalCount, Long currentCount) {
+        this.chargePlaceId = chargePlaceId;
         this.name = name;
         this.totalCount = totalCount;
         this.currentCount = currentCount;
@@ -26,7 +26,7 @@ public class SearchChargeResponseDto {
 
     public static SearchChargeResponseDto toResponseDto(Charge charge) {
         return SearchChargeResponseDto.builder()
-                .id(charge.getId())
+                .chargePlaceId(charge.getChargePlaceId())
                 .name(charge.getName())
                 .totalCount(charge.getTotalCount())
                 .currentCount(charge.getCurrentCount())
