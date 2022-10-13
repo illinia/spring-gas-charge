@@ -1,20 +1,30 @@
 package com.portfolio.gascharge.controller.charge.dto;
 
 import com.portfolio.gascharge.domain.charge.Charge;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
-public class PostChargeRequestDto {
+public class AddChargeRequestDto {
 
-    @NotBlank(message = "chargePlaceId is mandatory")
+    @NotBlank
+    @ApiModelProperty(example = "testId")
     private String chargePlaceId;
-    @NotBlank(message = "name is mandatory")
+    @NotBlank
+    @ApiModelProperty(example = "testName")
     private String name;
-    @NotBlank(message = "totalCount is mandatory")
+    @ApiModelProperty(example = "5")
+    @NotNull
+    @Min(value = 0)
     private Long totalCount;
-    @NotBlank(message = "currentCount is mandatory")
+    @ApiModelProperty(example = "2")
+    @NotNull
+    @Min(value = 0)
     private Long currentCount;
 
     public Charge toEntity() {

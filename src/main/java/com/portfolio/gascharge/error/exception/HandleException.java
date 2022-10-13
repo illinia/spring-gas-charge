@@ -12,18 +12,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class HandleException {
-    public ResponseEntity handleExceptionInternal(ErrorCode errorCode) {
-        return ResponseEntity.status(errorCode.getHttpStatus())
-                .body(makeErrorResponse(errorCode));
-    }
-
-    private ErrorResponse makeErrorResponse(ErrorCode errorCode) {
-        return ErrorResponse.builder()
-                .code(errorCode.getHttpStatus())
-                .message(errorCode.getMessage())
-                .build();
-    }
-
     public ResponseEntity handleExceptionInternal(ErrorCode errorCode, String message) {
         return ResponseEntity.status(errorCode.getHttpStatus())
                 .body(makeErrorResponse(errorCode, message));

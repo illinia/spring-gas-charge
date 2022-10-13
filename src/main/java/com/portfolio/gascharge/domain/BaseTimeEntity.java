@@ -1,5 +1,6 @@
 package com.portfolio.gascharge.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -12,11 +13,13 @@ import java.time.LocalDateTime;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class BaseTimeEntity {
+public abstract class BaseTimeEntity {
 
     @CreatedDate
+    @JsonIgnore
     private LocalDateTime createdDate;
 
     @LastModifiedDate
+    @JsonIgnore
     private LocalDateTime modifiedDate;
 }

@@ -3,6 +3,7 @@ package com.portfolio.gascharge.error.exception;
 import com.portfolio.gascharge.error.errorcode.CommonErrorCode;
 import com.portfolio.gascharge.error.errorcode.ErrorCode;
 import com.portfolio.gascharge.error.errorcode.UserErrorCode;
+import com.portfolio.gascharge.error.exception.jpa.NoEntityFoundException;
 import com.portfolio.gascharge.error.exception.web.RestApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +34,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleException.handleExceptionInternal(UserErrorCode.INACTIVE_USER, UserErrorCode.INACTIVE_USER.getMessage());
     }
 
-    @ExceptionHandler(NoResultException.class)
-    public ResponseEntity handleNoResultException(NoResultException e) {
+    @ExceptionHandler(NoEntityFoundException.class)
+    public ResponseEntity handleNoEntityFoundException(NoEntityFoundException e) {
         return handleException.handleExceptionInternal(CommonErrorCode.RESOURCE_NOT_FOUND, e.getMessage());
     }
 
@@ -46,7 +47,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(RestApiException.class)
     public ResponseEntity handleCustomException(RestApiException e) {
         ErrorCode errorCode = e.getErrorCode();
-        return handleException.handleExceptionInternal(errorCode);
+        return handleException.handleExceptionInternal(errorCode, errorCode.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

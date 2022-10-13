@@ -2,6 +2,23 @@
 
 ### 0.0 기본 기능 구현
 ___
+#### 0.0.8 내역 (12 Oct 2022)
+1. 예약 엔티티 제작, 유저, 충전소 엔티티와 매핑
+2. 예약 등록, 수정 기능 추가
+   1. 예약 등록
+      1. POST “/reservation” 권한 USER
+         1. ReserveRequestDto
+         2. ReserveResponseDto
+   2. 예약 수정
+      1. PATCH “/reservation” 권한 USER
+         1. UpdateReservationRequestDto
+         2. UpdateReservationResponseDto
+3. 사전권한부여 메서드에 SpEL 사용하여 인증되고 이메일 일치하는 유저 본인만 예약 수정하게 수정
+4. 스웨거 설명, 기본값 설정
+5. 스프링 부트 validation 기능 RequestDto 에 추가
+#### 0.0.9 업데이트 예정
+1. 예약 crud 계속 추가
+___
 #### 0.0.7 내역 (12 Oct 2022)
 1. 스웨거 테스트용 계정 생성, 부트 실행시 jwt 토큰값 콘솔창에서 출력
 2. 권한 없을때 던져지는 AccessDeniedException 도 전역 예외 핸들러에서 처리

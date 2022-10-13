@@ -84,7 +84,7 @@ public class ChargeInfoJobConfig {
                 return item.toEntity();
             } else {
                 Charge charge = byId.get();
-                charge.update(item.getTotalCount(), item.getCurrentCount());
+                charge.updateCounts(item.getTotalCount(), item.getCurrentCount());
                 return charge;
             }
         };

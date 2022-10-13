@@ -1,23 +1,24 @@
 package com.portfolio.gascharge.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.portfolio.gascharge.domain.reservation.Reservation;
 import com.portfolio.gascharge.enums.user.UserAuthority;
 import com.portfolio.gascharge.oauth.entity.AuthProvider;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
-@Setter
 @NoArgsConstructor
+@ToString(exclude = {"reservations"})
 @Entity
-@Table(name = "USER", uniqueConstraints = {
+@Table(uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
 })
 @DynamicInsert
@@ -25,18 +26,23 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "USER_ID")
+    @JsonIgnore
     private Long id;
 
+    @Setter
     @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
     private String email;
 
+    @Setter
     private String imageUrl;
 
+    @ColumnDefault(value = "false")
     @Column(nullable = false)
-    private Boolean emailVerified = false;
+    private Boolean emailVerified;
 
     @JsonIgnore
     private String password;
@@ -49,7 +55,11 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @ColumnDefault(value = "'ROLE_USER'")
-    private UserAuthority userAuthority;
+    private UserAuthority userAuthority = UserAuthority.ROLE_USER;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonManagedReference
+    private List<Reservation> reservations = new ArrayList<>();
 
     @Builder
     public User(String name, String email, String imageUrl, Boolean emailVerified, String password, AuthProvider provider, String providerId, UserAuthority userAuthority) {

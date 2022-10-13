@@ -7,15 +7,18 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import io.micrometer.core.instrument.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.portfolio.gascharge.domain.charge.QCharge.charge;
 import static com.portfolio.gascharge.utils.querydsl.QueryDslUtil.getOrderSpecifiers;
+import static io.micrometer.core.instrument.util.StringUtils.isBlank;
 import static io.micrometer.core.instrument.util.StringUtils.isEmpty;
 
 @RequiredArgsConstructor
@@ -27,6 +30,8 @@ public class ChargeRepositoryImpl implements ChargeRepositoryCustom {
     public Page<Charge> findChargeWithSearchStatus(ChargeStatus chargeStatus, Pageable pageable) {
         List<OrderSpecifier> orderSpecifiers = getOrderSpecifiers(pageable, Charge.class, "charge");
 
+        System.out.println(chargeNameLike(chargeStatus.getName()));
+        System.out.println(chargeIsMembership(chargeStatus.getChargePlaceMembership()));
         QueryResults<Charge> results = queryFactory
                 .selectFrom(charge)
                 .where(
@@ -46,11 +51,11 @@ public class ChargeRepositoryImpl implements ChargeRepositoryCustom {
     }
 
     private BooleanExpression chargeNameLike(String name) {
-        return isEmpty(name) ? null : charge.name.like("%" + name + "%");
+        return StringUtils.isEmpty(name) ? null : charge.name.contains(name);
     }
 
     private BooleanExpression chargeIsMembership(ChargePlaceMembership chargePlaceMembership) {
-        return chargePlaceMembership == null ? null : charge.membership.eq(chargePlaceMembership);
+        return Objects.isNull(chargePlaceMembership) ? null : charge.membership.eq(chargePlaceMembership);
     }
 
 }

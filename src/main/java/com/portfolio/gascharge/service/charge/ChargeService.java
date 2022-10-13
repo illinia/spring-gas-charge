@@ -3,6 +3,7 @@ package com.portfolio.gascharge.service.charge;
 import com.portfolio.gascharge.domain.charge.Charge;
 import com.portfolio.gascharge.domain.charge.search.ChargeStatus;
 import com.portfolio.gascharge.enums.charge.ChargePlaceMembership;
+import com.portfolio.gascharge.error.exception.jpa.NoEntityFoundException;
 import com.portfolio.gascharge.repository.charge.ChargeRepository;
 import com.portfolio.gascharge.utils.entity.EntityDynamicUpdater;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.NoResultException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -23,12 +23,24 @@ public class ChargeService {
 
     private final ChargeRepository chargeRepository;
 
+    public void updateCount(String chargePlaceId, Long totalCount, Long currentCount) {
+        Optional<Charge> byChargePlaceId = chargeRepository.findByChargePlaceId(chargePlaceId);
+
+        if (byChargePlaceId.isEmpty()) {
+            throw new NoEntityFoundException();
+        }
+
+        Charge charge = byChargePlaceId.get();
+
+        charge.updateCounts(totalCount, currentCount);
+    }
+
     @Transactional(readOnly = true)
     public Charge findByChargePlaceId(String chargePlaceId) {
         Optional<Charge> byChargePlaceId = chargeRepository.findByChargePlaceId(chargePlaceId);
 
         if (byChargePlaceId.isEmpty()) {
-            throw new NoResultException("Entity result not found by " + chargePlaceId);
+            throw new NoEntityFoundException(Charge.class, chargePlaceId);
         }
 
         return byChargePlaceId.get();
@@ -62,7 +74,7 @@ public class ChargeService {
         Optional<Charge> byChargePlaceId = chargeRepository.findByChargePlaceId(chargePlaceId);
 
         if (byChargePlaceId.isEmpty()) {
-            throw new NoResultException();
+            throw new NoEntityFoundException(Charge.class, chargePlaceId);
         }
 
         Charge charge = byChargePlaceId.get();
@@ -76,7 +88,7 @@ public class ChargeService {
         Optional<Charge> byChargePlaceId = chargeRepository.findByChargePlaceId(chargePlaceId);
 
         if (byChargePlaceId.isEmpty()) {
-            throw new NoResultException("Entity result not found by " + chargePlaceId);
+            throw new NoEntityFoundException(Charge.class, chargePlaceId);
         }
 
         Charge charge = byChargePlaceId.get();

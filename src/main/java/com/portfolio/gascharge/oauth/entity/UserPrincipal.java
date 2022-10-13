@@ -32,9 +32,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     }
 
     public static UserPrincipal create(User user) {
-        UserAuthority userAuthority = Objects.isNull(user.getUserAuthority()) ? UserAuthority.ROLE_USER : user.getUserAuthority();
-
-        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(userAuthority.toString()));
+        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getUserAuthority().toString()));
 
         UserPrincipal userPrincipal = new UserPrincipal(
                 user.getId(),

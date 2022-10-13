@@ -1,7 +1,9 @@
 package com.portfolio.gascharge.config.swagger;
 
 import com.fasterxml.classmate.TypeResolver;
-import com.portfolio.gascharge.config.swagger.alternateType.CustomPageable;
+import com.portfolio.gascharge.config.swagger.alternateType.PageableAlternativeRules;
+import com.portfolio.gascharge.config.swagger.alternateType.UserPrincipalAlternativeRules;
+import com.portfolio.gascharge.oauth.entity.UserPrincipal;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Pageable;
@@ -36,8 +38,10 @@ public class SwaggerConfig {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .alternateTypeRules(
-                        AlternateTypeRules.newRule(typeResolver.resolve(Pageable.class), typeResolver.resolve(CustomPageable.class))
+                        AlternateTypeRules.newRule(typeResolver.resolve(Pageable.class), typeResolver.resolve(PageableAlternativeRules.class))
+                        ,AlternateTypeRules.newRule(typeResolver.resolve(UserPrincipal.class), typeResolver.resolve(UserPrincipalAlternativeRules.class))
                 )
+                .useDefaultResponseMessages(false)
                 .apiInfo(this.apiInfo())
                 .securityContexts(Arrays.asList(securityContext()))
                 .securitySchemes(Arrays.asList(apiKey()))
