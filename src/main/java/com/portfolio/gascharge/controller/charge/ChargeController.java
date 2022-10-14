@@ -45,12 +45,13 @@ public class ChargeController {
             defaultValue = "1150020121HS2022025"
     )
     @GetMapping("/{chargePlaceId}")
-    public ResponseEntity getChargeByChargePlaceId(@PathVariable @NotBlank String chargePlaceId) {
+    public ResponseEntity getChargeByChargePlaceId(
+            @PathVariable @NotBlank String chargePlaceId) {
         Charge charge = chargeService.findByChargePlaceId(chargePlaceId);
 
         SearchChargeResponseDto searchChargeResponseDto = SearchChargeResponseDto.toResponseDto(charge);
 
-        return new ResponseEntity<>(searchChargeResponseDto, null, HttpStatus.OK);
+        return new ResponseEntity<>(searchChargeResponseDto, HttpStatus.OK);
     }
 
     @ApiOperation(
@@ -58,14 +59,14 @@ public class ChargeController {
     )
     @ApiImplicitParams({
             @ApiImplicitParam(
-                  name = "is-membership"
-                  , value = "가맹점 여부"
-                  , defaultValue = "not-membership"
-            )
-            ,@ApiImplicitParam(
-                    name = "name"
-                    ,value = "충전소 이름"
-                    ,defaultValue = "인천"
+                    name = "is-membership",
+                    value = "가맹점 여부",
+                    defaultValue = "not-membership"
+            ),
+            @ApiImplicitParam(
+                    name = "name",
+                    value = "충전소 이름",
+                    defaultValue = "인천"
             )
     })
     @GetMapping("")
@@ -80,7 +81,7 @@ public class ChargeController {
 
         Page<SearchChargeResponseDto> result = new PageImpl<>(collect, pageable, collect.size());
 
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity(result, HttpStatus.OK);
     }
 
     @PostMapping("")

@@ -8,7 +8,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ReserveResponseDto {
+public class PostReserveResponseDto {
 
     private String reservationId;
     private String userEmail;
@@ -17,7 +17,7 @@ public class ReserveResponseDto {
     private ReservationStatus status;
 
     @Builder
-    public ReserveResponseDto(String reservationId, String userEmail, String chargePlaceId, LocalDateTime reserveTime, ReservationStatus status) {
+    public PostReserveResponseDto(String reservationId, String userEmail, String chargePlaceId, LocalDateTime reserveTime, ReservationStatus status) {
         this.reservationId = reservationId;
         this.userEmail = userEmail;
         this.chargePlaceId = chargePlaceId;
@@ -25,8 +25,8 @@ public class ReserveResponseDto {
         this.status = status;
     }
 
-    public static ReserveResponseDto toResponseDto(Reservation reservation) {
-        return ReserveResponseDto.builder()
+    public static PostReserveResponseDto toResponseDto(Reservation reservation) {
+        return PostReserveResponseDto.builder()
                 .reservationId(reservation.getReservationValidationId())
                 .userEmail(reservation.getUser().getEmail())
                 .chargePlaceId(reservation.getCharge().getChargePlaceId())

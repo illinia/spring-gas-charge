@@ -2,6 +2,7 @@ package com.portfolio.gascharge.service.reservation;
 
 import com.portfolio.gascharge.domain.charge.Charge;
 import com.portfolio.gascharge.domain.reservation.Reservation;
+import com.portfolio.gascharge.domain.reservation.search.ReservationSearchStatus;
 import com.portfolio.gascharge.domain.user.User;
 import com.portfolio.gascharge.enums.reservation.ReservationStatus;
 import com.portfolio.gascharge.error.errorcode.CommonErrorCode;
@@ -11,6 +12,8 @@ import com.portfolio.gascharge.repository.reservation.ReservationRepository;
 import com.portfolio.gascharge.repository.charge.ChargeRepository;
 import com.portfolio.gascharge.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,16 +56,31 @@ public class ReservationService {
         return save;
     }
 
-    public ReservationStatus updateStatus(Long reservationId, ReservationStatus status) {
-        Optional<Reservation> byId = reservationRepository.findById(reservationId);
+    public Reservation updateStatus(String reservationValidationId, ReservationStatus status) {
+        Optional<Reservation> byId = reservationRepository.findByReservationValidationId(reservationValidationId);
 
         if (byId.isEmpty()) {
-            throw new NoEntityFoundException(Reservation.class, reservationId.toString());
+            throw new NoEntityFoundException(Reservation.class, reservationValidationId);
         }
 
         Reservation reservation = byId.get();
 
-        return reservation.updateStatus(status);
+        reservation.updateStatus(status);
+
+        return reservation;
+    }
+
+    @Transactional(readOnly = true)
+    public boolean checkSameEmail(String email, String reservationValidationId) {
+        Optional<Reservation> byId = reservationRepository.findByReservationValidationId(reservationValidationId);
+
+        if (byId.isEmpty()) {
+            throw new NoEntityFoundException(Reservation.class, reservationValidationId);
+        }
+
+        Reservation reservation = byId.get();
+
+        return email.equals(reservation.getUser().getEmail());
     }
 
     public Reservation updateTime(String reservationValidationId, LocalDateTime time) {
@@ -81,5 +99,25 @@ public class ReservationService {
         reservation.updateTime(time);
 
         return reservation;
+    }
+
+    @Transactional(readOnly = true)
+    public Reservation findByReservationId(String id) {
+        Optional<Reservation> byId = reservationRepository.findByReservationValidationId(id);
+
+        if (byId.isEmpty()) {
+            throw new NoEntityFoundException(Reservation.class, id);
+        }
+
+        return byId.get();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Reservation> findAll(String email, String chargePlaceId, Pageable pageable) {
+        ReservationSearchStatus reservationSearchStatus = new ReservationSearchStatus();
+        reservationSearchStatus.setEmail(email);
+        reservationSearchStatus.setChargePlaceId(chargePlaceId);
+
+        return reservationRepository.findReservationWithSearchStatus(reservationSearchStatus, pageable);
     }
 }

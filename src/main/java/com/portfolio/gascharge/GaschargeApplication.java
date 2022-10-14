@@ -18,7 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
+import static com.portfolio.gascharge.domain.charge.ChargeTestData.*;
+import static com.portfolio.gascharge.domain.reservation.ReservationTestData.RESERVATION_TEST_ADMIN_UUID;
 import static com.portfolio.gascharge.domain.reservation.ReservationTestData.RESERVATION_TEST_UUID;
 import static com.portfolio.gascharge.domain.user.UserTestData.*;
 
@@ -67,13 +70,15 @@ public class GaschargeApplication {
 		System.out.println("Admin test id token = Bearer " + tokenAdmin);
 
 		Charge charge = Charge.builder()
-				.chargePlaceId("testId")
-				.name("test")
-				.totalCount(5L)
-				.currentCount(2L)
+				.chargePlaceId(CHARGE_TEST_ID)
+				.name(CHARGE_TEST_NAME)
+				.totalCount(CHARGE_TEST_TOTAL_COUNT)
+				.currentCount(CHARGE_TEST_CURRENT_COUNT)
 				.build();
 
 		Charge charge1 = chargeRepository.save(charge);
+
+		System.out.println("Test charge place id = " + CHARGE_TEST_ID);
 
 		Reservation reservation = Reservation.builder()
 				.time(LocalDateTime.now())
@@ -82,12 +87,24 @@ public class GaschargeApplication {
 				.reservationValidationId(RESERVATION_TEST_UUID)
 				.build();
 
+		Reservation reservation1 = Reservation.builder()
+				.time(LocalDateTime.now())
+				.charge(charge1)
+				.user(admin)
+				.reservationValidationId(RESERVATION_TEST_ADMIN_UUID)
+				.build();
+
 		Reservation save = reservationRepository.save(reservation);
+		Reservation save1 = reservationRepository.save(reservation1);
 
 		String reservationValidationId = save.getReservationValidationId();
 
 		System.out.println("Test reservation user email = " + user.getEmail());
 		System.out.println("Test reservationValidationId = " + reservationValidationId);
+
+		String reservationValidationId1 = save1.getReservationValidationId();
+		System.out.println("Test reservation admin email = " + admin.getEmail());
+		System.out.println("Test reservationValidationId = " + reservationValidationId1);
 	}
 
 }

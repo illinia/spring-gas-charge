@@ -17,16 +17,16 @@ import static com.portfolio.gascharge.domain.user.UserTestData.USER_TEST_EMAIL1;
 @Data
 public class UpdateReservationRequestDto {
 
-    @ApiModelProperty(example = RESERVATION_TEST_UUID)
+    @ApiModelProperty(value = "예약 식별 아이디", example = RESERVATION_TEST_UUID)
     @NotBlank
     private String reservationValidationId;
 
-    @ApiModelProperty(example = USER_TEST_EMAIL1)
+    @ApiModelProperty(value = "유저 이메일 해당 유저가 예약할 유저와 일치하는지 이메일로 비교하기 위한 값", example = USER_TEST_EMAIL1)
     @Email
     private String email;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
-    @ApiModelProperty(example = "2022-10-13T20:00:00")
+    @ApiModelProperty(value = "변경할 시간", example = "2022-10-13T20:00:00")
     @NotNull
     @Future
     private LocalDateTime updateTime;

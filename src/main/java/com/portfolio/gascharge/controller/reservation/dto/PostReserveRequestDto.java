@@ -10,14 +10,14 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
-public class ReserveRequestDto {
+public class PostReserveRequestDto {
 
-    @ApiModelProperty(example = "1150020121HS2022025")
+    @ApiModelProperty(value = "충전소 식별 아이디", example = "1150020121HS2022025")
     @NotBlank
     private String chargePlaceId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
-    @ApiModelProperty(example = "2022-10-13T20:00:00")
+    @ApiModelProperty(value = "예약 시간", example = "2022-10-13T20:00:00")
     @NotNull
     @Future
     private LocalDateTime time;

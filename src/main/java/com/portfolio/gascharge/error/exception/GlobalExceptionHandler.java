@@ -30,7 +30,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity handleAccessDeniedException(AccessDeniedException e) {
-        log.error("handleAccessDeniedException ", e.getMessage());
+        log.error("handleAccessDeniedException ", e);
         return handleException.handleExceptionInternal(UserErrorCode.INACTIVE_USER, UserErrorCode.INACTIVE_USER.getMessage());
     }
 

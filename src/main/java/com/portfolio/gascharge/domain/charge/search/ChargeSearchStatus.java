@@ -11,7 +11,7 @@ import javax.persistence.Enumerated;
 @Getter
 @Setter
 @ToString
-public class ChargeStatus {
+public class ChargeSearchStatus {
 
     private String name;
 

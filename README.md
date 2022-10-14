@@ -2,7 +2,50 @@
 
 ### 0.0 기본 기능 구현
 ___
-#### 0.0.8 내역 (12 Oct 2022)
+#### 0.0.9 내역 (14 Oct 2022)
+1. 예약 조회
+   1. GET 단건조회 “/{reservationValidationId}” 권한 USER
+      1. 예약 식별 아이디
+      2. 해당 유저 이메일(사전 메서드 권한 검증)
+      3. Request
+         1. PathVariable String reservationValidationId
+   2. GET 전체조회, 다건조회 “/reservation”
+      1. 전체 조회일 시 권한 인증 유저, ADMIN
+         1. email 선택, email 넣든 안 넣든 검색 됨 -> 모든 유저의 예약을 볼 수 있다.
+      2. 다건 조회일 시 권한 인증 유저, email == 인증 객체
+         1. 다건 조회는 email 이 필수
+         2. 자동으로 검색시 email 비교해서 같은 예약만 응답 -> 다른 유저의 예약은 볼 수 없다.
+      3. Request
+         1. 해당 유저 이메일 RequestParam String email
+         2. 충전소 아이디 RequestParam String chargePlaceId
+         3. 예약 상태 RequestParam ReservationStatus status
+         4. Pageable
+      4. Response Page<GetReservationResponseDto>
+      5. GetReservationResponseDto
+         1. String reservationId
+         2. String userEmail
+         3. String chargePlaceId
+         4. LocalDatetime reserveTime
+         5. ReservationStatus status
+2. 예약 취소
+   1. POST 예약 상태를 취소로 변경 “/cancel” 권한 USER, ADMIN
+      1. 파라미터 String email, String reservationValidationId
+      2. USER 인 경우 예약 이메일과 유저 이메일 일치 확인
+      3. ADMIN 은 확인 필요 없음
+      4. Request
+         1. String email
+         2. String reservationValidationId
+      5. Response CancelReservationResponseDto
+         1. String reservationId
+         2. String userEmail
+         3. String chargePlaceId
+         4. LocalDatetime reserveTime
+         5. ReservationStatus status
+#### 0.0.10 업데이트 예정
+1. 충전소, 유저 상세 검색 기능 추가 후 버전 업
+2. 충전소, 유저 검색시 N + 1 확인 및 쿼리 수정
+___
+#### 0.0.8 내역 (13 Oct 2022)
 1. 예약 엔티티 제작, 유저, 충전소 엔티티와 매핑
 2. 예약 등록, 수정 기능 추가
    1. 예약 등록

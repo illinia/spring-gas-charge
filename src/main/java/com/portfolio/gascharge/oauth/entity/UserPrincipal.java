@@ -20,7 +20,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     private Long id;
     private String email;
     private String password;
-    private  Collection<? extends GrantedAuthority> authorities;
+    private Collection<? extends GrantedAuthority> authorities;
     @Setter
     private Map<String, Object> attributes;
 
@@ -40,7 +40,6 @@ public class UserPrincipal implements OAuth2User, UserDetails {
                 user.getPassword(),
                 authorities
         );
-        System.out.println("userPrincipal create = " + userPrincipal);
         return userPrincipal;
     }
 
