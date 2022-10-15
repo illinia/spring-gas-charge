@@ -1,12 +1,15 @@
 package com.portfolio.gascharge.domain.reservation;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.portfolio.gascharge.domain.BaseTimeEntity;
 import com.portfolio.gascharge.domain.charge.Charge;
 import com.portfolio.gascharge.domain.user.User;
 import com.portfolio.gascharge.enums.reservation.ReservationStatus;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -14,8 +17,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
-
-import static com.portfolio.gascharge.domain.reservation.ReservationTestData.RESERVATION_TEST_UUID;
 
 @Getter
 @NoArgsConstructor
@@ -29,16 +30,16 @@ public class Reservation extends BaseTimeEntity {
     @JsonIgnore
     private Long id;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, unique = true)
     private String reservationValidationId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonBackReference
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonBackReference
     @JoinColumn(name = "CHARGE_ID", nullable = false)
     private Charge charge;
 

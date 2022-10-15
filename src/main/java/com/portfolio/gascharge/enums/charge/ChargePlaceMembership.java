@@ -1,19 +1,23 @@
 package com.portfolio.gascharge.enums.charge;
 
+import com.portfolio.gascharge.error.exception.enums.NotFoundMatchedEnum;
+
+import java.util.Arrays;
+
 public enum ChargePlaceMembership {
-    MEMBERSHIP, NOT_MEMBERSHIP;
+    MEMBERSHIP("membership"),
+    NOT_MEMBERSHIP("not-membership");
+
+    private String membershipString;
+
+    ChargePlaceMembership(String membershipString) {
+        this.membershipString = membershipString;
+    }
 
     public static ChargePlaceMembership getChargePlaceMembership(String name) {
-        if (name == null) {
-            return null;
-        }
-        if (name.equals("membership")) {
-            return ChargePlaceMembership.MEMBERSHIP;
-        }
-        if (name.equals("not-membership")) {
-            return ChargePlaceMembership.NOT_MEMBERSHIP;
-        }
-
-        throw new RuntimeException("No matched membership name");
+        return Arrays.stream(ChargePlaceMembership.values())
+                .filter(m -> m.membershipString.equals(name))
+                .findAny()
+                .orElseThrow(() -> new NotFoundMatchedEnum(ChargePlaceMembership.class, name));
     }
 }

@@ -5,12 +5,11 @@ import com.portfolio.gascharge.domain.reservation.Reservation;
 import com.portfolio.gascharge.domain.reservation.search.ReservationSearchStatus;
 import com.portfolio.gascharge.domain.user.User;
 import com.portfolio.gascharge.enums.reservation.ReservationStatus;
-import com.portfolio.gascharge.error.errorcode.CommonErrorCode;
 import com.portfolio.gascharge.error.exception.jpa.NoEntityFoundException;
-import com.portfolio.gascharge.error.exception.web.RestApiException;
-import com.portfolio.gascharge.repository.reservation.ReservationRepository;
 import com.portfolio.gascharge.repository.charge.ChargeRepository;
+import com.portfolio.gascharge.repository.reservation.ReservationRepository;
 import com.portfolio.gascharge.repository.user.UserRepository;
+import com.portfolio.gascharge.utils.entity.EntityDynamicUpdater;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -84,10 +84,6 @@ public class ReservationService {
     }
 
     public Reservation updateTime(String reservationValidationId, LocalDateTime time) {
-        if (!time.getClass().equals(LocalDateTime.class)) {
-            throw new RestApiException(CommonErrorCode.INVALID_PARAMETER, "LocalDateTime 파라미터가 적합하지 않습니다. 값 = " + time.toString());
-        }
-
         Optional<Reservation> byId = reservationRepository.findByReservationValidationId(reservationValidationId);
 
         if (byId.isEmpty()) {
@@ -119,5 +115,19 @@ public class ReservationService {
         reservationSearchStatus.setChargePlaceId(chargePlaceId);
 
         return reservationRepository.findReservationWithSearchStatus(reservationSearchStatus, pageable);
+    }
+
+    public Reservation updateDynamicField(String reservationValidationId, Map<String, Object> attributesMap) {
+        Optional<Reservation> byId = reservationRepository.findByReservationValidationId(reservationValidationId);
+
+        if (byId.isEmpty()) {
+            throw new NoEntityFoundException(Reservation.class, reservationValidationId);
+        }
+
+        Reservation reservation = byId.get();
+
+        EntityDynamicUpdater.update(attributesMap, reservation);
+
+        return reservation;
     }
 }

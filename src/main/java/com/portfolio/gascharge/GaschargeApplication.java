@@ -4,6 +4,7 @@ import com.portfolio.gascharge.domain.charge.Charge;
 import com.portfolio.gascharge.domain.reservation.Reservation;
 import com.portfolio.gascharge.domain.user.User;
 import com.portfolio.gascharge.enums.user.UserAuthority;
+import com.portfolio.gascharge.enums.user.UserEmailVerified;
 import com.portfolio.gascharge.oauth.entity.AuthProvider;
 import com.portfolio.gascharge.oauth.token.TokenProvider;
 import com.portfolio.gascharge.repository.charge.ChargeRepository;
@@ -18,11 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import static com.portfolio.gascharge.domain.charge.ChargeTestData.*;
-import static com.portfolio.gascharge.domain.reservation.ReservationTestData.RESERVATION_TEST_ADMIN_UUID;
-import static com.portfolio.gascharge.domain.reservation.ReservationTestData.RESERVATION_TEST_UUID;
+import static com.portfolio.gascharge.domain.reservation.ReservationTestData.*;
 import static com.portfolio.gascharge.domain.user.UserTestData.*;
 
 @SpringBootApplication
@@ -49,7 +48,6 @@ public class GaschargeApplication {
 		User user = User.builder()
 				.name(USER_TEST_NAME1)
 				.email(USER_TEST_EMAIL1)
-				.emailVerified(true)
 				.provider(AuthProvider.google)
 				.build();
 		userRepository.save(user);
@@ -57,7 +55,7 @@ public class GaschargeApplication {
 		User admin = User.builder()
 				.name(USER_TEST_NAME2)
 				.email(USER_TEST_EMAIL2)
-				.emailVerified(true)
+				.emailVerified(UserEmailVerified.VERIFIED)
 				.provider(AuthProvider.google)
 				.userAuthority(UserAuthority.ROLE_ADMIN)
 				.build();
@@ -76,13 +74,23 @@ public class GaschargeApplication {
 				.currentCount(CHARGE_TEST_CURRENT_COUNT)
 				.build();
 
-		Charge charge1 = chargeRepository.save(charge);
+		Charge charge1 = Charge.builder()
+				.chargePlaceId(CHARGE_TEST_ID1)
+				.name(CHARGE_TEST_NAME1)
+				.totalCount(CHARGE_TEST_TOTAL_COUNT)
+				.currentCount(CHARGE_TEST_CURRENT_COUNT)
+				.build();
+
+
+		chargeRepository.save(charge);
+		chargeRepository.save(charge1);
 
 		System.out.println("Test charge place id = " + CHARGE_TEST_ID);
+		System.out.println("Test charge1 place id = " + CHARGE_TEST_ID1);
 
 		Reservation reservation = Reservation.builder()
 				.time(LocalDateTime.now())
-				.charge(charge1)
+				.charge(charge)
 				.user(user)
 				.reservationValidationId(RESERVATION_TEST_UUID)
 				.build();
@@ -90,21 +98,31 @@ public class GaschargeApplication {
 		Reservation reservation1 = Reservation.builder()
 				.time(LocalDateTime.now())
 				.charge(charge1)
+				.user(user)
+				.reservationValidationId(RESERVATION_TEST_UUID1)
+				.build();
+
+		Reservation reservation2 = Reservation.builder()
+				.time(LocalDateTime.now())
+				.charge(charge)
 				.user(admin)
 				.reservationValidationId(RESERVATION_TEST_ADMIN_UUID)
 				.build();
 
 		Reservation save = reservationRepository.save(reservation);
 		Reservation save1 = reservationRepository.save(reservation1);
+		Reservation save2 = reservationRepository.save(reservation2);
 
 		String reservationValidationId = save.getReservationValidationId();
+		String reservationValidationId1 = save1.getReservationValidationId();
 
 		System.out.println("Test reservation user email = " + user.getEmail());
 		System.out.println("Test reservationValidationId = " + reservationValidationId);
-
-		String reservationValidationId1 = save1.getReservationValidationId();
-		System.out.println("Test reservation admin email = " + admin.getEmail());
 		System.out.println("Test reservationValidationId = " + reservationValidationId1);
+
+		String reservationValidationId2 = save2.getReservationValidationId();
+		System.out.println("Test reservation admin email = " + admin.getEmail());
+		System.out.println("Test reservationValidationId = " + reservationValidationId2);
 	}
 
 }

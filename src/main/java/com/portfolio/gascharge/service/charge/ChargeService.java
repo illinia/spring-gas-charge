@@ -2,7 +2,6 @@ package com.portfolio.gascharge.service.charge;
 
 import com.portfolio.gascharge.domain.charge.Charge;
 import com.portfolio.gascharge.domain.charge.search.ChargeSearchStatus;
-import com.portfolio.gascharge.enums.charge.ChargePlaceMembership;
 import com.portfolio.gascharge.error.exception.jpa.NoEntityFoundException;
 import com.portfolio.gascharge.repository.charge.ChargeRepository;
 import com.portfolio.gascharge.utils.entity.EntityDynamicUpdater;
@@ -62,10 +61,7 @@ public class ChargeService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Charge> findAll(String name, ChargePlaceMembership membership, Pageable pageable) {
-        ChargeSearchStatus chargeSearchStatus = new ChargeSearchStatus();
-        chargeSearchStatus.setName(name);
-        chargeSearchStatus.setChargePlaceMembership(membership);
+    public Page<Charge> findAll(ChargeSearchStatus chargeSearchStatus, Pageable pageable) {
 
         return chargeRepository.findChargeWithSearchStatus(chargeSearchStatus, pageable);
     }

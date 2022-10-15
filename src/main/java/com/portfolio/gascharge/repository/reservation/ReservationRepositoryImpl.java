@@ -1,6 +1,5 @@
 package com.portfolio.gascharge.repository.reservation;
 
-import com.portfolio.gascharge.domain.reservation.QReservation;
 import com.portfolio.gascharge.domain.reservation.Reservation;
 import com.portfolio.gascharge.domain.reservation.search.ReservationSearchStatus;
 import com.querydsl.core.types.OrderSpecifier;

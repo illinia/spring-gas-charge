@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.portfolio.gascharge.domain.reservation.Reservation;
 import com.portfolio.gascharge.enums.user.UserAuthority;
+import com.portfolio.gascharge.enums.user.UserEmailVerified;
 import com.portfolio.gascharge.oauth.entity.AuthProvider;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -40,9 +41,9 @@ public class User {
     @Setter
     private String imageUrl;
 
-    @ColumnDefault(value = "false")
-    @Column(nullable = false)
-    private Boolean emailVerified;
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault(value = "'UNVERIFIED'")
+    private UserEmailVerified emailVerified;
 
     @JsonIgnore
     private String password;
@@ -55,14 +56,14 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @ColumnDefault(value = "'ROLE_USER'")
-    private UserAuthority userAuthority = UserAuthority.ROLE_USER;
+    private UserAuthority userAuthority;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonManagedReference
     private List<Reservation> reservations = new ArrayList<>();
 
     @Builder
-    public User(String name, String email, String imageUrl, Boolean emailVerified, String password, AuthProvider provider, String providerId, UserAuthority userAuthority) {
+    public User(String name, String email, String imageUrl, UserEmailVerified emailVerified, String password, AuthProvider provider, String providerId, UserAuthority userAuthority) {
         this.name = name;
         this.email = email;
         this.imageUrl = imageUrl;

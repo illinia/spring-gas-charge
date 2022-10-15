@@ -31,7 +31,7 @@ public class ChargeRepositoryImpl implements ChargeRepositoryCustom {
         QueryResults<Charge> results = queryFactory
                 .selectFrom(charge)
                 .where(
-                        chargeNameLike(chargeSearchStatus.getName()),
+                        chargeNameContains(chargeSearchStatus.getName()),
                         chargeIsMembershipEq(chargeSearchStatus.getChargePlaceMembership())
                 )
                 .orderBy(orderSpecifiers.stream().toArray(OrderSpecifier[]::new))
@@ -46,7 +46,7 @@ public class ChargeRepositoryImpl implements ChargeRepositoryCustom {
         return new PageImpl<>(content, pageable, total);
     }
 
-    private BooleanExpression chargeNameLike(String name) {
+    private BooleanExpression chargeNameContains(String name) {
         return StringUtils.isNullOrEmpty(name) ? null : charge.name.contains(name);
     }
 

@@ -7,6 +7,7 @@ import com.portfolio.gascharge.enums.user.UserAuthority;
 import com.portfolio.gascharge.oauth.entity.CurrentUser;
 import com.portfolio.gascharge.oauth.entity.UserPrincipal;
 import com.portfolio.gascharge.service.reservation.ReservationService;
+import com.portfolio.gascharge.utils.web.DtoFieldSpreader;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -25,8 +26,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.portfolio.gascharge.domain.charge.ChargeTestData.CHARGE_TEST_ID;
@@ -58,16 +59,29 @@ public class ReservationController {
     }
 
     @ApiOperation(
-            value = "예약 수정", notes = "인증되었고 수정 요청한 예약의 이메일과 인증 사용자의 이메일이 같거나, ADMIN 역할일 경우 예약 시간을 수정한다."
+            value = "본인 예약 수정", notes = "인증되었고 수정 요청한 예약의 이메일과 인증 사용자의 이메일이 같거나, ADMIN 역할일 경우 예약 시간을 수정한다."
     )
-    @PatchMapping("")
     @PreAuthorize("isAuthenticated() and ((#requestDto.email == principal.email) or hasRole('ADMIN'))")
-    public ResponseEntity updateReservationTime(
+    @PatchMapping("")
+    public ResponseEntity updateSelfReservationTime(
             @RequestBody @Valid UpdateReservationRequestDto requestDto
             ) {
         Reservation reservation = reservationService.updateTime(requestDto.getReservationValidationId(), requestDto.getUpdateTime());
 
         return new ResponseEntity(UpdateReservationResponseDto.toResponseDto(reservation), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{reservationValidationId}")
+    public ResponseEntity forceUpdate(
+            @PathVariable @NotBlank String reservationValidationId,
+            @RequestBody ForceUpdateReservationRequestDto requestDto) {
+
+        Map<String, Object> attributesMap = DtoFieldSpreader.of(requestDto);
+
+        Reservation reservation = reservationService.updateDynamicField(reservationValidationId, attributesMap);
+
+        return new ResponseEntity(ForceUpdateReservationResponseDto.toResponseDto(reservation), HttpStatus.OK);
     }
 
     @ApiOperation(
@@ -82,7 +96,7 @@ public class ReservationController {
     )
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{reservationValidationId}")
-    public ResponseEntity getReservationById(
+    public ResponseEntity getById(
             @PathVariable @NotBlank String reservationValidationId) {
         Reservation reservation = reservationService.findByReservationId(reservationValidationId);
 
@@ -108,7 +122,7 @@ public class ReservationController {
     })
     @GetMapping("")
     @PreAuthorize("isAuthenticated() and ((#email == principal.email) or hasRole('ADMIN'))")
-    public ResponseEntity getReservationList(
+    public ResponseEntity getList(
             @RequestParam(value = "email", required = false) @Email String email,
             @RequestParam(value = "chargePlaceId", required = false) String chargePlaceId,
             @NotNull Pageable pageable) {
@@ -138,7 +152,7 @@ public class ReservationController {
     })
     @PostMapping("/cancel")
     @PreAuthorize("isAuthenticated() and ((#email == principal.email) or hasRole('ADMIN'))")
-    public ResponseEntity cancelReservation(
+    public ResponseEntity cancel(
             @CurrentUser UserPrincipal userPrincipal,
             @RequestParam(value = "email", required = false) @Email String email,
             @RequestParam(value = "reservationValidationId") @NotBlank String reservationValidationId) {

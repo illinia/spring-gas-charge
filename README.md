@@ -2,6 +2,41 @@
 
 ### 0.0 기본 기능 구현
 ___
+#### 0.0.10 내역 (15 Oct 2022)
+1. 예약 상태 변경 어드민용 기능 추가
+   1. PATCH “/reservationValidationId” 권한 ADMIN
+      1. PathVariable String reservationValidationId
+      2. ForceUpdateReservationRequestDto
+         1. ReservationStatus status
+         2. LocalDateTime time
+      3. ForceUpdateReservationResponseDto
+         1. String reservationId
+         2. String userEmail
+         3. String chargePlaceId
+         4. LocalDatetime reserveTime
+         5. ReservationStatus status
+2. 유저 전체 검색
+   1. GET “” 권한 ADMIN
+      1. RequestParam
+         1. String email
+         2. String email-verified, verified, unverified
+         3. String name
+         4. String provider google, kakao, naver
+         5. String user-authority user, admin
+      2. ResponseBody SearchUserListResponseDto
+         1. Page<SearchUserResponseDto>
+            1. String imageUrl
+            2. String name
+            3. String email
+            4. UserAuthority authority;
+            5. GetReservationResponseDto reservations
+3. 유저 전체 검색시 N + 1 문제 해결
+   1. 유저 전체 검색시 유저 안의 예약, 예약 안의 충전소 정보가 n + 1 * n + 1 로 검색됨
+   2. querydsl 의 leftJoin 메서드와 fetchJoin 메서드로 하나의 쿼리로 불러올 수 있게 수정
+#### 0.1.0 업데이트 예정
+1. 테스트 코드 작성
+2. AWS 배포
+___
 #### 0.0.9 내역 (14 Oct 2022)
 1. 예약 조회
    1. GET 단건조회 “/{reservationValidationId}” 권한 USER

@@ -2,7 +2,9 @@ package com.portfolio.gascharge.controller.charge;
 
 import com.portfolio.gascharge.controller.charge.dto.AddChargeRequestDto;
 import com.portfolio.gascharge.controller.charge.dto.SearchChargeResponseDto;
+import com.portfolio.gascharge.controller.charge.dto.UpdateChargeRequestDto;
 import com.portfolio.gascharge.domain.charge.Charge;
+import com.portfolio.gascharge.domain.charge.search.ChargeSearchStatus;
 import com.portfolio.gascharge.enums.charge.ChargePlaceMembership;
 import com.portfolio.gascharge.service.charge.ChargeService;
 import com.portfolio.gascharge.utils.web.DtoFieldSpreader;
@@ -61,7 +63,7 @@ public class ChargeController {
             @ApiImplicitParam(
                     name = "is-membership",
                     value = "가맹점 여부",
-                    defaultValue = "not-membership"
+                    defaultValue = "NOT_MEMBERSHIP"
             ),
             @ApiImplicitParam(
                     name = "name",
@@ -72,11 +74,15 @@ public class ChargeController {
     @GetMapping("")
     public ResponseEntity getChargeList(
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "is-membership", required = false) String isMembership,
+            @RequestParam(value = "is-membership", required = false) ChargePlaceMembership isMembership,
             @NotNull Pageable pageable) {
         log.info("getChargeList request : pageable = {}, name = {}, isMembership = {}", pageable, name, isMembership);
 
-        List<SearchChargeResponseDto> collect = chargeService.findAll(name, ChargePlaceMembership.getChargePlaceMembership(isMembership), pageable)
+        ChargeSearchStatus chargeSearchStatus = new ChargeSearchStatus();
+        chargeSearchStatus.setName(name);
+        chargeSearchStatus.setChargePlaceMembership(isMembership);
+
+        List<SearchChargeResponseDto> collect = chargeService.findAll(chargeSearchStatus, pageable)
                 .getContent().stream().map(SearchChargeResponseDto::toResponseDto).collect(Collectors.toList());
 
         Page<SearchChargeResponseDto> result = new PageImpl<>(collect, pageable, collect.size());
@@ -92,13 +98,15 @@ public class ChargeController {
         return new ResponseEntity(SearchChargeResponseDto.toResponseDto(charge), HttpStatus.CREATED);
     }
 
-    @PatchMapping("")
+    @PatchMapping("/{chargePlaceId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity updateCharge(
-            @RequestBody @Valid AddChargeRequestDto updateChargeRequestDto) {
-        Map<String, Object> attributesMap = DtoFieldSpreader.of(updateChargeRequestDto);
+            @PathVariable @NotBlank String chargePlaceId,
+            @RequestBody UpdateChargeRequestDto requestDto) {
 
-        Charge charge = chargeService.updateDynamicField(updateChargeRequestDto.getChargePlaceId(), attributesMap);
+        Map<String, Object> attributesMap = DtoFieldSpreader.of(requestDto);
+
+        Charge charge = chargeService.updateDynamicField(chargePlaceId, attributesMap);
 
         return new ResponseEntity(SearchChargeResponseDto.toResponseDto(charge), HttpStatus.OK);
     }

@@ -2,7 +2,6 @@ package com.portfolio.gascharge.domain.charge;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.portfolio.gascharge.domain.BaseTimeEntity;
 import com.portfolio.gascharge.domain.reservation.Reservation;
 import com.portfolio.gascharge.enums.charge.ChargePlaceMembership;
