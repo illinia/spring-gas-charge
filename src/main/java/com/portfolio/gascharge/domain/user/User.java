@@ -19,7 +19,8 @@ import java.util.List;
 @NoArgsConstructor
 @ToString(exclude = {"reservations"})
 @Entity
-@Table(uniqueConstraints = {
+@Table(name = "USERS",
+        uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
 })
 @DynamicInsert

@@ -2,6 +2,53 @@
 
 ### 0.0 기본 기능 구현
 ___
+#### 0.1.0 내역 (16 Oct 2022)
+1. AWS EC2 배포
+2. 맥에서 ec2 콘솔 접속시 간편 설정
+   1. cp pem 파일 위치 ~/.ssh/
+   2. cd .ssh/
+   3. chmod 600 pem 파일 위치
+   4. vim ~/.ssh/config
+   5. Host 에 별칭 저장, HostName 에 탄력적 주소 입력 IdentityFile 에 pem 파일 주소 입력
+   6. chmod 700 ~/.ssh/config 
+   7. ssh 별
+3. 리눅스 자바 버젼 체크, 설치
+   1. java -version
+   2. Java11
+   3. sudo yum install -y java-11-amazon-corretto.x86_64
+   4. sudo /usr/sbin/alternatives --config java
+   5. sudo yum remove java-1.7.0-openjdk
+   6. java -version
+4. 타임존 변경
+   1. sudo rm /etc/localtime
+   2. sudo ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+   3. date
+5. 시스템 호스트 이름 변경
+   1. sudo vi /etc/cloud/cloud.cfg
+   2. preserve_hostname 설정이 없으면 파일 끝에 텍스트 추가 preserve_hostname: true
+   3. sudo hostnamectl set-hostname 필요한 도메인 이름
+6. sudo reboot
+7. ec2 에서 rds 접근 확인
+   1. sudo yum install mysql
+   2. mysql -u 유저이름 -p -h ec2주소
+8. ec2 에 깃 설치, 프로젝트 빌드
+   1. sudo yum install git
+   2. git --version
+   3. mkdir ~/app && mkdir ~/app/step1
+   4. cd ~/app/step1
+   5. git clone 주소
+   6. ./gradlew clean
+   7. ./gradlew compileQuerydsl (자바 버젼이 안맞으면 에러남. 버젼 11)
+   8. ./gradlew build
+9. 배포 스크립트 제작
+   1. vim ~/app/step1/deploy.sh
+   2. 내용은 프로젝트 배포_스크립트.sh
+   3. chmod +x ./deploy.sh
+   4. ./deploy.sh
+   5. vim nohup.out 에러 체크
+   6. vim /home/ec2-user/app/application-oauth.properties
+   7. vim /home/ec2-user/app/application-charge.properties
+___
 #### 0.0.10 내역 (15 Oct 2022)
 1. 예약 상태 변경 어드민용 기능 추가
    1. PATCH “/reservationValidationId” 권한 ADMIN
