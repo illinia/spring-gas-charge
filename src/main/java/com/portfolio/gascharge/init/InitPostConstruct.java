@@ -11,6 +11,7 @@ import com.portfolio.gascharge.oauth.entity.AuthProvider;
 import com.portfolio.gascharge.oauth.token.TokenProvider;
 import com.portfolio.gascharge.repository.charge.ChargeRepository;
 import com.portfolio.gascharge.repository.reservation.ReservationRepository;
+import com.portfolio.gascharge.repository.token.TokenRepository;
 import com.portfolio.gascharge.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -30,6 +31,7 @@ import static com.portfolio.gascharge.domain.reservation.ReservationTestData.*;
 import static com.portfolio.gascharge.domain.user.UserTestData.*;
 
 @Component
+@Transactional
 public class InitPostConstruct {
     @Autowired
     private UserRepository userRepository;
@@ -40,12 +42,10 @@ public class InitPostConstruct {
     @Autowired
     private ChargeRepository chargeRepository;
     @Autowired
+    private TokenRepository tokenRepository;
+    @Autowired
     private AppProperties appProperties;
-    @PersistenceContext
-    private EntityManager em;
-
     @EventListener(ApplicationReadyEvent.class)
-    @Transactional
     public void initTestValue() {
         Optional<User> byEmail = userRepository.findByEmail(USER_TEST_EMAIL1);
 
@@ -88,14 +88,12 @@ public class InitPostConstruct {
         Token userToken = new Token();
         userToken.setName("유저");
         userToken.setJwtToken("Bearer " + token);
-        em.persist(userToken);
+        tokenRepository.save(userToken);
 
         Token adminToken = new Token();
         adminToken.setName("어드민");
         adminToken.setJwtToken("Bearer " + tokenAdmin);
-        em.persist(adminToken);
-
-        em.flush();
+        tokenRepository.save(adminToken);
 
         Optional<Charge> byChargePlaceId = chargeRepository.findByChargePlaceId(CHARGE_TEST_ID);
 
