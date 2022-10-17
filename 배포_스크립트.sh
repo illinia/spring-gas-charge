@@ -1,12 +1,17 @@
 #!/bin/bash
 
 REPOSITORY=/home/ec2-user/app/step1
-PROJECT_NAME=spring-gas-charge
+PROJECT_DIRECTORY_NAME=spring-gas-charge
+PROJECT_NAME=gascharge
 
-cd $REPOSITORY/$PROJECT_NAME/
+cd $REPOSITORY/$PROJECT_DIRECTORY_NAME/
 
 echo "> Git Pull"
 git pull
+
+echo "> 프로젝트 compileQuerydsl 시작"
+./gradlew clean
+./gradlew compileQuerydsl
 
 echo "> 프로젝트 Build 시작"
 ./gradlew build
@@ -17,7 +22,7 @@ cd $REPOSITORY
 
 echo "> Build 파일 복사"
 
-cp $REPOSITORY/$PROJECT_NAME/build/libs/*.jar $REPOSITORY/
+cp $REPOSITORY/$PROJECT_DIRECTORY_NAME/build/libs/*.jar $REPOSITORY/
 
 echo "> 현재 구동중인 애플리케이션 pid 확인"
 
@@ -39,6 +44,11 @@ JAR_NAME=$(ls -tr $REPOSITORY/ | grep jar | tail -n 1)
 
 echo "> JAR Name: $JAR_NAME"
 
-nohup java -jar -Dspring.config.location=classpath:/application.properties, \
-        /home/ec2-user/app/application-oauth.properties \
-        /home/ec2-user/app/application-charge.properties $REPOSITORY/$JAR_NAME 2>&1 &
+nohup java -jar -Dspring.config.location=classpath:/application.properties,\
+/home/ec2-user/app/application-oauth.properties,\
+/home/ec2-user/app/application-real-db.properties,\
+/home/ec2-user/app/application-charge.properties,\
+/home/ec2-user/app/application-real-security.properties,\
+classpath:/application-real.properties \
+-Dspring.profiles.active=real \
+ $REPOSITORY/$JAR_NAME 2>&1 &

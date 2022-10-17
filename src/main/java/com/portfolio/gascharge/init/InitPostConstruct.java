@@ -85,15 +85,27 @@ public class InitPostConstruct {
         System.out.println("Test id token = Bearer " + token);
         System.out.println("Admin test id token = Bearer " + tokenAdmin);
 
-        Token userToken = new Token();
-        userToken.setName("유저");
-        userToken.setJwtToken("Bearer " + token);
-        tokenRepository.save(userToken);
+        Optional<Token> byName = tokenRepository.findByName("유저");
 
-        Token adminToken = new Token();
-        adminToken.setName("어드민");
-        adminToken.setJwtToken("Bearer " + tokenAdmin);
-        tokenRepository.save(adminToken);
+        if (byName.isEmpty()) {
+            Token userToken = new Token();
+            userToken.setName("유저");
+            userToken.setJwtToken("Bearer " + token);
+            tokenRepository.save(userToken);
+        } else {
+            byName.get().setJwtToken("Bearer " + token);
+        }
+
+        Optional<Token> byName1 = tokenRepository.findByName("어드민");
+
+        if (byName1.isEmpty()) {
+            Token adminToken = new Token();
+            adminToken.setName("어드민");
+            adminToken.setJwtToken("Bearer " + tokenAdmin);
+            tokenRepository.save(adminToken);
+        } else {
+            byName1.get().setJwtToken("Bearer " + tokenAdmin);
+        }
 
         Optional<Charge> byChargePlaceId = chargeRepository.findByChargePlaceId(CHARGE_TEST_ID);
 

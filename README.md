@@ -26,9 +26,21 @@ ___
    8. symbolic link 설정 $ sudo ln -s /etc/nginx/sites-available/react-social.conf /etc/nginx/sites-enabled/react-social.conf
    9. sudo nginx -t 에서 ok 뜨면 정상
    10. sudo systemctl restart nginx
-4. 엔티티 @UniqueConstraint 추가
-3. rds 저장할때 테스트용 데이터 초기화 수정
+3. 엔티티 @UniqueConstraint 추가
+4. rds 저장할때 테스트용 데이터 초기화 수정
    1. @PostConstruct 메서드에서 해당 테스트 엔티티가 있으면 등록 안하게 수정
+5. 배포 실패했던 문제 해결
+   1. 배포 스크립트에서 프로젝트 디렉토리명을 잘못 입력해서 생겼던 문제
+6. ec2 가 계속 멈추던 문제 해결
+   1. 렘 용량 디스크 스왑 증가로 해결
+   2. sudo dd if=/dev/zero of=/swapfile bs=128M count=16
+   3. sudo chmod 600 /swapfile
+   4. sudo mkswap /swapfile
+   5. sudo swapon /swapfile
+   6. sudo swapon -s
+   7. sudo vi /etc/fstab
+      1. /swapfile swap swap defaults 0 0 입력
+   8. free
 ___
 #### 0.1.0 내역 (16 Oct 2022)
 1. AWS EC2 배포
