@@ -95,6 +95,8 @@ public class InitPostConstruct {
         adminToken.setJwtToken("Bearer " + tokenAdmin);
         em.persist(adminToken);
 
+        em.flush();
+
         Optional<Charge> byChargePlaceId = chargeRepository.findByChargePlaceId(CHARGE_TEST_ID);
 
         Charge charge = null;
