@@ -3,6 +3,7 @@ package com.portfolio.gascharge.init;
 import com.portfolio.gascharge.config.properties.AppProperties;
 import com.portfolio.gascharge.domain.charge.Charge;
 import com.portfolio.gascharge.domain.reservation.Reservation;
+import com.portfolio.gascharge.domain.token.Token;
 import com.portfolio.gascharge.domain.user.User;
 import com.portfolio.gascharge.enums.user.UserAuthority;
 import com.portfolio.gascharge.enums.user.UserEmailVerified;
@@ -12,11 +13,16 @@ import com.portfolio.gascharge.repository.charge.ChargeRepository;
 import com.portfolio.gascharge.repository.reservation.ReservationRepository;
 import com.portfolio.gascharge.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.portfolio.gascharge.domain.charge.ChargeTestData.*;
@@ -35,9 +41,10 @@ public class InitPostConstruct {
     private ChargeRepository chargeRepository;
     @Autowired
     private AppProperties appProperties;
+    @PersistenceContext
+    private EntityManager em;
 
-
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
     @Transactional
     public void initTestValue() {
         Optional<User> byEmail = userRepository.findByEmail(USER_TEST_EMAIL1);
@@ -77,6 +84,16 @@ public class InitPostConstruct {
 
         System.out.println("Test id token = Bearer " + token);
         System.out.println("Admin test id token = Bearer " + tokenAdmin);
+
+        Token userToken = new Token();
+        userToken.setName("유저");
+        userToken.setJwtToken("Bearer " + token);
+        em.persist(userToken);
+
+        Token adminToken = new Token();
+        adminToken.setName("어드민");
+        adminToken.setJwtToken("Bearer " + tokenAdmin);
+        em.persist(adminToken);
 
         Optional<Charge> byChargePlaceId = chargeRepository.findByChargePlaceId(CHARGE_TEST_ID);
 

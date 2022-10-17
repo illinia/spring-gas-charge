@@ -3,3 +3,5 @@ create table charge (charge_id bigint not null auto_increment, created_date date
 create table reservation (reservation_id bigint not null auto_increment, created_date datetime(6), modified_date datetime(6), reservation_validation_id varchar(255) not null, status varchar(255) default 'BEFORE_CHARGE', time datetime(6) not null, charge_id bigint not null, user_id bigint not null, primary key (reservation_id)) engine=InnoDB;
 
 create table users (user_id bigint not null auto_increment, email varchar(255) not null, email_verified varchar(255) default 'UNVERIFIED', image_url varchar(255), name varchar(255) not null, password varchar(255), provider varchar(255) not null, provider_id varchar(255), user_authority varchar(255) default 'ROLE_USER', primary key (user_id)) engine=InnoDB;
+
+create table token (id bigint not null auto_increment, created_date datetime(6), modified_date datetime(6), jwt_token varchar(255), name varchar(255), primary key (id)) engine=InnoDB;
