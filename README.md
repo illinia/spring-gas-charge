@@ -1,6 +1,29 @@
+# 수소 충전 예약 플랫폼 백엔드
+### 전 직장에서 프론트로 참여했던 프로젝트의 백엔드를 구현한 수소 충전소 예약 플랫폼입니다.
 
+* 스웨거 페이지
+  * http://ec2-43-201-91-96.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui.html
+* 소셜 로그인 페이지(해당 페이지는 다른 분이 구현할 것을 수정한 것 입니다.)
+  * http://ec2-43-201-91-96.ap-northeast-2.compute.amazonaws.com
 
-### 0.0 기본 기능 구현
+### 코드 설명 요약
+* 스프링 시큐리티 src/main/java/com/portfolio/gascharge/config/security/SecurityConfig.java
+  1. 소셜 로그인 with jwt 
+  2. 스프링 시큐리티에서 권장하는 필터 구현, 역할에 맞게 메서드 구현
+  3. 컨트롤러 마다 인증된 유저의 권한 역할에 맞게 SpEL 사용하여 메서드 별 인증 구현 @PreAuthorize
+* 스프링 배치 src/main/java/com/portfolio/gascharge/batch
+  1. chunk, tasklet 둘다 사용하여 스텝 구성
+  2. 쿼츠를 사용해 충전소 정보 일정 시간마다 가져오게 스케줄링
+* jpa, 스프링 데이터 jpa, querydsl
+  1. jpa 사용하여 엔티티 제작
+  2. 스프링 데이터 jpa 사용하여 repository 제작
+  3. querydsl 사용하여 페이징, 정렬 쿼리 제작
+* 스프링 web, validation 컨트롤러 제작
+  1. 스프링 web 에서 제공하는 어노테이션 사용
+  2. 스프링 validation 사용하여 컨트롤러에서 유효성 검사
+  3. @RestControllerAdvice 사용하여 전역 예외 핸들러 구현
+  
+### 0.1 배포 후 소셜 로그인 기능 추가, 테스트 코드 추가
 ___
 #### 0.1.1 내역 (17 Oct 2022)
 1. 리액트 프로젝트 빌드
@@ -41,6 +64,10 @@ ___
    7. sudo vi /etc/fstab
       1. /swapfile swap swap defaults 0 0 입력
    8. free
+___
+#### 0.1.2 업데이트 예정
+1. 네이버 로그인 연동
+2. 카카오 로그인 연동
 ___
 #### 0.1.0 내역 (16 Oct 2022)
 1. AWS EC2 배포
@@ -91,6 +118,7 @@ ___
 10. 루트 계정 비밀번호 초기화
     1. sudo passwd root
     2. su root
+### 0.0 기본 기능 구현
 ___
 #### 0.0.10 내역 (15 Oct 2022)
 1. 예약 상태 변경 어드민용 기능 추가

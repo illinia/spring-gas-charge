@@ -23,19 +23,17 @@ public class ChargeApi {
 
     private final ChargeProperties chargeProperties;
     public ResponseEntity<String> getChargeResponseEntity() {
-        System.out.println("getChargeResponseEntity");
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", chargeProperties.getApi().getAuthorization());
 
-        URI uri = URI.create(chargeProperties.getApi().getUrl());
+        URI uri = URI.create(this.chargeProperties.getApi().getUrl());
 
         return restTemplate.exchange(new RequestEntity<String>(headers, HttpMethod.GET, uri), String.class);
     }
 
     public List<ChargeApiDto> getChargeDtoList(ResponseEntity<String> res) throws ParseException {
-        System.out.println("getChargeDtoList");
         List<ChargeApiDto> charges = new ArrayList<>();
 
         JSONArray array = (JSONArray) new JSONParser().parse(res.getBody());

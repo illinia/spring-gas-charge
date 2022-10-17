@@ -1,7 +1,6 @@
 package com.portfolio.gascharge.domain.token;
 
 import com.portfolio.gascharge.domain.BaseTimeEntity;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
