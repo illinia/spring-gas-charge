@@ -17,11 +17,11 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-@ToString(exclude = {"reservations"})
+@ToString(exclude = {"password"})
 @Entity
 @Table(name = "USERS",
         uniqueConstraints = {
-        @UniqueConstraint(columnNames = "email")
+        @UniqueConstraint(columnNames = {"USER_ID", "email"})
 })
 @DynamicInsert
 public class User {

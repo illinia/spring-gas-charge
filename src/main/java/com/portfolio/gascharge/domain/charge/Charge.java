@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString(exclude = {"reservations"})
 @Table(uniqueConstraints = {
-        @UniqueConstraint(columnNames = "chargePlaceId")
+        @UniqueConstraint(columnNames = {"CHARGE_ID", "chargePlaceId"})
 })
 @DynamicInsert
 public class Charge extends BaseTimeEntity {

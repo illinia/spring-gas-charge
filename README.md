@@ -2,6 +2,34 @@
 
 ### 0.0 기본 기능 구현
 ___
+#### 0.1.1 내역 (17 Oct 2022)
+1. 리액트 프로젝트 빌드
+   1. npm run build
+2. nginx 설치
+   1. sudo amazon-linux-extras install nginx1
+   2. sudo systemctl start nginx
+   3. ec2 보안그룹 80 포트 열기
+   4. sudo vim /etc/nginx/nginx.conf
+      1. 기본 설정 주석처리 server{}
+      2. include /etc/nginx/sites-enabled/*.conf; 추갸
+   5. sudo mkdir /etc/nginx/sites-available
+   6. sudo mkdir /etc/nginx/sites-enabled
+   7. sudo vim /etc/nginx/sites-available/react-social.conf
+      1. server {
+      2. listen 80;
+      3. location / {
+      4. root /home/ec2-user/프로젝트주소/build;
+      5. index index.html index.htm;
+      6. try_files $uri $uri/ /index.html;
+      7. }
+      8. }
+   8. symbolic link 설정 $ sudo ln -s /etc/nginx/sites-available/react-social.conf /etc/nginx/sites-enabled/react-social.conf
+   9. sudo nginx -t 에서 ok 뜨면 정상
+   10. sudo systemctl restart nginx
+4. 엔티티 @UniqueConstraint 추가
+3. rds 저장할때 테스트용 데이터 초기화 수정
+   1. @PostConstruct 메서드에서 해당 테스트 엔티티가 있으면 등록 안하게 수정
+___
 #### 0.1.0 내역 (16 Oct 2022)
 1. AWS EC2 배포
 2. 맥에서 ec2 콘솔 접속시 간편 설정
@@ -48,6 +76,9 @@ ___
    5. vim nohup.out 에러 체크
    6. vim /home/ec2-user/app/application-oauth.properties
    7. vim /home/ec2-user/app/application-charge.properties
+10. 루트 계정 비밀번호 초기화
+    1. sudo passwd root
+    2. su root
 ___
 #### 0.0.10 내역 (15 Oct 2022)
 1. 예약 상태 변경 어드민용 기능 추가

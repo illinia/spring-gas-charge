@@ -21,6 +21,9 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @ToString(exclude = {"user", "charge"})
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"RESERVATION_ID", "reservationValidationId"})
+})
 @DynamicInsert
 @Entity
 public class Reservation extends BaseTimeEntity {

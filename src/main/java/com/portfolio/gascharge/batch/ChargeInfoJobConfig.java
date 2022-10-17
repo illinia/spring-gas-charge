@@ -76,8 +76,6 @@ public class ChargeInfoJobConfig {
     @Bean
     public ItemProcessor<ChargeApiDto, Charge> processor() {
         return item -> {
-            log.info(" 배치 프로세스 진행중...");
-
             Optional<Charge> byId = chargeRepository.findByChargePlaceId(item.getChargePlaceId());
 
             if (byId.isEmpty()) {
