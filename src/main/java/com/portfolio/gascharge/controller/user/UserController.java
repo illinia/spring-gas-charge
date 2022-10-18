@@ -53,7 +53,7 @@ public class UserController {
     }
 
     @ApiOperation(
-            value = "유저 전체, 다건 조회", notes = "이메일 포함, 이메일 인증 여부 일치, 이름 퐇마, 로그인 공급자 일치, 권한 일치 를 포함한 페이징 검색을 합니다."
+            value = "유저 전체, 다건 조회", notes = "이메일 포함, 이메일 인증 여부 일치, 이름 포함, 로그인 공급자 일치, 권한 일치 를 포함한 페이징 검색을 합니다."
     )
     @ApiImplicitParams({
             @ApiImplicitParam(

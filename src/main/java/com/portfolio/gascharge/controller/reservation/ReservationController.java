@@ -71,6 +71,9 @@ public class ReservationController {
         return new ResponseEntity(UpdateReservationResponseDto.toResponseDto(reservation), HttpStatus.OK);
     }
 
+    @ApiOperation(
+            value = "예약 상태 강제 업데이트", notes = "어드민 권한 유저가 모든 예약의 상태와 시간을 강제 수정할 수 있습니다."
+    )
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{reservationValidationId}")
     public ResponseEntity forceUpdate(

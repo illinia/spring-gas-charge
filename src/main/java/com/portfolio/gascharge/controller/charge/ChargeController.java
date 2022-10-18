@@ -90,6 +90,9 @@ public class ChargeController {
         return new ResponseEntity(result, HttpStatus.OK);
     }
 
+    @ApiOperation(
+            value = "충전소 등록", notes = "새로운 충전소를 등록합니다."
+    )
     @PostMapping("")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity addCharge(
@@ -98,6 +101,9 @@ public class ChargeController {
         return new ResponseEntity(SearchChargeResponseDto.toResponseDto(charge), HttpStatus.CREATED);
     }
 
+    @ApiOperation(
+            value = "충전소 정보 수정", notes = "충전소 이름, 총 충전 가능 차량수, 현재 대기 인원수를 업데이트 합니다."
+    )
     @PatchMapping("/{chargePlaceId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity updateCharge(
@@ -111,6 +117,9 @@ public class ChargeController {
         return new ResponseEntity(SearchChargeResponseDto.toResponseDto(charge), HttpStatus.OK);
     }
 
+    @ApiOperation(
+            value = "충전소 삭제", notes = "충전소 정보를 삭제합니다."
+    )
     @ApiImplicitParam(
             name = "chargePlaceId",
             value = "충전소 고유값",
