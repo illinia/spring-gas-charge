@@ -6,6 +6,8 @@ public class ChargeTestData {
     public static final String CHARGE_TEST_NAME = "test";
     public static final String CHARGE_TEST_NAME1 = "test1";
     public static final Long CHARGE_TEST_TOTAL_COUNT = 5L;
+    public static final Long CHARGE_TEST_TOTAL_COUNT1 = 10L;
     public static final Long CHARGE_TEST_CURRENT_COUNT = 2L;
+    public static final Long CHARGE_TEST_CURRENT_COUNT1 = 4L;
 
 }

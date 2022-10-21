@@ -26,7 +26,7 @@ import static com.portfolio.gascharge.domain.user.UserTestData.*;
 
 @Component
 @Transactional
-@Profile("default")
+@Profile("test")
 public class InitPostConstruct {
     @Autowired
     private UserRepository userRepository;
@@ -116,8 +116,8 @@ public class InitPostConstruct {
             charge1 = Charge.builder()
                     .chargePlaceId(CHARGE_TEST_ID1)
                     .name(CHARGE_TEST_NAME1)
-                    .totalCount(CHARGE_TEST_TOTAL_COUNT)
-                    .currentCount(CHARGE_TEST_CURRENT_COUNT)
+                    .totalCount(CHARGE_TEST_TOTAL_COUNT1)
+                    .currentCount(CHARGE_TEST_CURRENT_COUNT1)
                     .build();
             chargeRepository.save(charge1);
         } else {

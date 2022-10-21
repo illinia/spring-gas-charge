@@ -30,8 +30,8 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.portfolio.gascharge.domain.user.UserTestData.USER_TEST_EMAIL1;
-import static com.portfolio.gascharge.domain.user.UserTestData.USER_TEST_NAME1;
+import static com.portfolio.gascharge.domain.user.UserTestData.USER_TEST_EMAIL;
+import static com.portfolio.gascharge.domain.user.UserTestData.USER_TEST_NAME;
 
 @Slf4j
 @RestController
@@ -59,7 +59,7 @@ public class UserController {
             @ApiImplicitParam(
                     name = "email",
                     value = "이메일 포함 검색",
-                    defaultValue = USER_TEST_EMAIL1
+                    defaultValue = USER_TEST_EMAIL
             ),
             @ApiImplicitParam(
                     name = "email-verified",
@@ -69,7 +69,7 @@ public class UserController {
             @ApiImplicitParam(
                     name = "name",
                     value = "이름 포함 검색",
-                    defaultValue = USER_TEST_NAME1
+                    defaultValue = USER_TEST_NAME
             ),
             @ApiImplicitParam(
                     name = "provider",

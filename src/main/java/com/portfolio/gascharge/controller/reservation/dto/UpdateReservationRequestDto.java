@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 import static com.portfolio.gascharge.domain.reservation.ReservationTestData.RESERVATION_TEST_UUID;
-import static com.portfolio.gascharge.domain.user.UserTestData.USER_TEST_EMAIL1;
+import static com.portfolio.gascharge.domain.user.UserTestData.USER_TEST_EMAIL;
 
 @Data
 public class UpdateReservationRequestDto {
@@ -21,7 +21,7 @@ public class UpdateReservationRequestDto {
     @NotBlank
     private String reservationValidationId;
 
-    @ApiModelProperty(value = "유저 이메일 해당 유저가 예약할 유저와 일치하는지 이메일로 비교하기 위한 값", example = USER_TEST_EMAIL1)
+    @ApiModelProperty(value = "유저 이메일 해당 유저가 예약할 유저와 일치하는지 이메일로 비교하기 위한 값", example = USER_TEST_EMAIL)
     @Email
     private String email;
 

@@ -21,6 +21,6 @@ public class WebConverterConfiguration implements WebMvcConfigurer {
                 new StringToChargePlaceMembershipConverter()
         ));
 
-        converters.stream().forEach(c -> registry.addConverter(c));
+        converters.forEach(registry::addConverter);
     }
 }

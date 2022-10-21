@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
 @Data
 public class SearchUserResponseDto {
 
-    private String imageUrl;
     private String name;
     private String email;
-    private UserAuthority authority;
+    private String imageUrl;
     private UserEmailVerified emailVerified;
     private AuthProvider authProvider;
+    private UserAuthority authority;
     private List<GetReservationResponseDto> reservations;
 
     @Builder

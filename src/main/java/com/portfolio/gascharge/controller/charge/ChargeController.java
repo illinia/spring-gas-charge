@@ -82,7 +82,9 @@ public class ChargeController {
         chargeSearchStatus.setName(name);
         chargeSearchStatus.setChargePlaceMembership(isMembership);
 
-        List<SearchChargeResponseDto> collect = chargeService.findAll(chargeSearchStatus, pageable)
+        Page<Charge> all = chargeService.findAll(chargeSearchStatus, pageable);
+        System.out.println(all);
+        List<SearchChargeResponseDto> collect = all
                 .getContent().stream().map(SearchChargeResponseDto::toResponseDto).collect(Collectors.toList());
 
         Page<SearchChargeResponseDto> result = new PageImpl<>(collect, pageable, collect.size());

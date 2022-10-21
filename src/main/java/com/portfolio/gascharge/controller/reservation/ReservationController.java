@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 import static com.portfolio.gascharge.domain.charge.ChargeTestData.CHARGE_TEST_ID;
 import static com.portfolio.gascharge.domain.reservation.ReservationTestData.RESERVATION_TEST_UUID;
-import static com.portfolio.gascharge.domain.user.UserTestData.USER_TEST_EMAIL1;
+import static com.portfolio.gascharge.domain.user.UserTestData.USER_TEST_EMAIL;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -115,7 +115,7 @@ public class ReservationController {
             @ApiImplicitParam(
                     name = "email",
                     value = "검색 조건 이메일, 어드민일 경우 생략가능(전체조회)",
-                    defaultValue = USER_TEST_EMAIL1
+                    defaultValue = USER_TEST_EMAIL
             ),
             @ApiImplicitParam(
                     name = "chargePlaceId",
@@ -145,7 +145,7 @@ public class ReservationController {
             @ApiImplicitParam(
                     name = "email",
                     value = "본인 확인용 이메일",
-                    defaultValue = USER_TEST_EMAIL1
+                    defaultValue = USER_TEST_EMAIL
             ),
             @ApiImplicitParam(
                     name = "reservationValidationId",
