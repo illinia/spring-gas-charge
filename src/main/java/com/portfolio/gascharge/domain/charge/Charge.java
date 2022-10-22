@@ -21,7 +21,7 @@ import java.util.List;
         @UniqueConstraint(columnNames = {"CHARGE_ID", "chargePlaceId"})
 })
 @DynamicInsert
-public class Charge extends BaseTimeEntity {
+public class Charge extends BaseTimeEntity implements Cloneable {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CHARGE_ID")
@@ -61,5 +61,14 @@ public class Charge extends BaseTimeEntity {
     public void updateCounts(Long totalCount, Long currentCount) {
         this.totalCount = totalCount;
         this.currentCount = currentCount;
+    }
+
+    @Override
+    public Charge clone() {
+        try {
+            return (Charge) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

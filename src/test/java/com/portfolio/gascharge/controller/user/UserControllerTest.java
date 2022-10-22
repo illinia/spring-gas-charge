@@ -40,10 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(
         controllers = UserController.class,
         excludeFilters = {
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {SecurityConfig.class, TokenAuthenticationFilter.class})
-        },
-        includeFilters = {
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {GlobalExceptionHandler.class, HandleException.class})
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {SecurityConfig.class, TokenAuthenticationFilter.class, GlobalExceptionHandler.class, HandleException.class})
         }
 )
 public class UserControllerTest {
@@ -67,17 +64,6 @@ public class UserControllerTest {
     @Test
     void getUserInfoWithAuthorization() throws Exception {
         // given USER_TEST
-
-        User testUser = User.builder()
-                .name(USER_TEST_NAME)
-                .email(USER_TEST_EMAIL)
-                .imageUrl(USER_TEST_IMAGE_URL)
-                .emailVerified(USER_TEST_EMAIL_VERIFIED)
-                .password(USER_TEST_PASSWORD)
-                .provider(USER_TEST_AUTH_PROVIDER)
-                .providerId(USER_TEST_PROVIDER_ID)
-                .userAuthority(USER_TEST_USER_AUTHORITY)
-                .build();
 
         // when
         when(userService.findById(any())).thenReturn(UserTestData.getCloneUser());

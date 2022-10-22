@@ -23,7 +23,17 @@
   2. 스프링 validation 사용하여 컨트롤러에서 유효성 검사
   3. @RestControllerAdvice 사용하여 전역 예외 핸들러 구현
   
-### 0.1 배포 후 소셜 로그인 기능 추가, 테스트 코드 추가
+### 0.2
+___
+#### 0.2 내역 (22 Oct 2022)
+1. SecurityIntegrationTest 추가
+   1. profile default 로 설정해서 main 코드 설정 가져와서 테스트
+   2. 인증된 유저 없으면 401 응답, 인증되었으면 200 응답
+2. UserControllerTest 추가
+   1. 스프링 시큐리티 관련 클래스 컴포넌트 스캔에서 필터해서 제거 혹은 MockBean 으로 등록
+   2. @AuthenticationPrincipal 사용시 MockMvc 에 ArgumentResolver 추가
+   3. 서비스 레이어는 mock 객체로 만들어 컨트롤러의 기능만 테스트
+   4. 컨트롤러에서 dto 로 변환해 보내주는 json 객체의 데이터값 테스트
 ___
 #### 0.1.1 내역 (17 Oct 2022)
 1. 리액트 프로젝트 빌드
