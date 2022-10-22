@@ -50,11 +50,12 @@ public class Charge extends BaseTimeEntity {
     private List<Reservation> reservations = new ArrayList<>();
 
     @Builder
-    public Charge(String chargePlaceId, String name, Long totalCount, Long currentCount) {
+    public Charge(String chargePlaceId, String name, Long totalCount, Long currentCount, ChargePlaceMembership membership) {
         this.chargePlaceId = chargePlaceId;
         this.name = name;
         this.totalCount = totalCount;
         this.currentCount = currentCount;
+        this.membership = membership;
     }
 
     public void updateCounts(Long totalCount, Long currentCount) {

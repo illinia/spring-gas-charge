@@ -37,26 +37,6 @@ public class ChargeController {
     private final ChargeService chargeService;
 
     @ApiOperation(
-            value = "충전소 단건 검색", notes = "ChargePlaceId 로 충전소 단건 검색한다."
-    )
-    @ApiImplicitParam(
-            name = "chargePlaceId",
-            value = "충전소 고유값",
-            required = true,
-            paramType = "path",
-            defaultValue = "1150020121HS2022025"
-    )
-    @GetMapping("/{chargePlaceId}")
-    public ResponseEntity getChargeByChargePlaceId(
-            @PathVariable @NotBlank String chargePlaceId) {
-        Charge charge = chargeService.findByChargePlaceId(chargePlaceId);
-
-        SearchChargeResponseDto searchChargeResponseDto = SearchChargeResponseDto.toResponseDto(charge);
-
-        return new ResponseEntity<>(searchChargeResponseDto, HttpStatus.OK);
-    }
-
-    @ApiOperation(
             value = "충전소 페이징, 정렬 검색", notes = "충전소 이름(포함), 가맹점 여부, Pageable 객체 이용한 조회입니다."
     )
     @ApiImplicitParams({
@@ -90,6 +70,26 @@ public class ChargeController {
         Page<SearchChargeResponseDto> result = new PageImpl<>(collect, pageable, collect.size());
 
         return new ResponseEntity(result, HttpStatus.OK);
+    }
+
+    @ApiOperation(
+            value = "충전소 단건 검색", notes = "ChargePlaceId 로 충전소 단건 검색한다."
+    )
+    @ApiImplicitParam(
+            name = "chargePlaceId",
+            value = "충전소 고유값",
+            required = true,
+            paramType = "path",
+            defaultValue = "1150020121HS2022025"
+    )
+    @GetMapping("/{chargePlaceId}")
+    public ResponseEntity getChargeByChargePlaceId(
+            @PathVariable @NotBlank String chargePlaceId) {
+        Charge charge = chargeService.findByChargePlaceId(chargePlaceId);
+
+        SearchChargeResponseDto searchChargeResponseDto = SearchChargeResponseDto.toResponseDto(charge);
+
+        return new ResponseEntity<>(searchChargeResponseDto, HttpStatus.OK);
     }
 
     @ApiOperation(

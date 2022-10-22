@@ -5,6 +5,7 @@ import com.portfolio.gascharge.domain.charge.Charge;
 import com.portfolio.gascharge.domain.reservation.Reservation;
 import com.portfolio.gascharge.domain.token.Token;
 import com.portfolio.gascharge.domain.user.User;
+import com.portfolio.gascharge.domain.user.UserTestData;
 import com.portfolio.gascharge.oauth.token.TokenProvider;
 import com.portfolio.gascharge.repository.charge.ChargeRepository;
 import com.portfolio.gascharge.repository.reservation.ReservationRepository;
@@ -22,7 +23,8 @@ import java.util.Optional;
 
 import static com.portfolio.gascharge.domain.charge.ChargeTestData.*;
 import static com.portfolio.gascharge.domain.reservation.ReservationTestData.*;
-import static com.portfolio.gascharge.domain.user.UserTestData.*;
+import static com.portfolio.gascharge.domain.user.UserTestData.ADMIN_TEST_EMAIL;
+import static com.portfolio.gascharge.domain.user.UserTestData.USER_TEST_EMAIL;
 
 @Component
 @Transactional
@@ -47,7 +49,7 @@ public class InitPostConstruct {
         User user = null;
 
         if (byEmail.isEmpty()) {
-            user = USER_TEST;
+            user = UserTestData.getCloneUser();
             userRepository.save(user);
         } else {
             user = byEmail.get();
@@ -58,7 +60,7 @@ public class InitPostConstruct {
         User admin = null;
 
         if (byEmail1.isEmpty()) {
-            admin = ADMIN_TEST;
+            admin = UserTestData.getCloneAdmin();
             userRepository.save(admin);
         } else {
             admin = byEmail1.get();

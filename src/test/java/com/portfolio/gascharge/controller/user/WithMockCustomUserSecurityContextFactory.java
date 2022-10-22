@@ -1,6 +1,7 @@
 package com.portfolio.gascharge.controller.user;
 
 import com.portfolio.gascharge.domain.user.User;
+import com.portfolio.gascharge.domain.user.UserTestData;
 import com.portfolio.gascharge.enums.user.UserAuthority;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,9 +11,6 @@ import org.springframework.security.test.context.support.WithSecurityContextFact
 
 import java.util.Collections;
 
-import static com.portfolio.gascharge.domain.user.UserTestData.ADMIN_TEST;
-import static com.portfolio.gascharge.domain.user.UserTestData.USER_TEST;
-
 public class WithMockCustomUserSecurityContextFactory implements WithSecurityContextFactory<WithMockUser> {
     @Override
     public SecurityContext createSecurityContext(WithMockUser authority) {
@@ -21,11 +19,11 @@ public class WithMockCustomUserSecurityContextFactory implements WithSecurityCon
         User user = null;
 
         if (authority.authority().equals(UserAuthority.ROLE_USER)) {
-            user = USER_TEST;
+            user = UserTestData.getCloneUser();
         }
 
         if (authority.authority().equals(UserAuthority.ROLE_ADMIN)) {
-            user = ADMIN_TEST;
+            user = UserTestData.getCloneAdmin();
         }
 
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, Collections.singleton(new SimpleGrantedAuthority(user.getUserAuthority().toString())));

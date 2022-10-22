@@ -14,7 +14,7 @@ public class UserTestData {
     public static final String USER_TEST_PROVIDER_ID = "testProviderId";
     public static final UserAuthority USER_TEST_USER_AUTHORITY = UserAuthority.ROLE_USER;
 
-    public static final User USER_TEST = User.builder()
+    private static final User USER_TEST = User.builder()
             .name(USER_TEST_NAME)
             .email(USER_TEST_EMAIL)
             .imageUrl(USER_TEST_IMAGE_URL)
@@ -25,6 +25,10 @@ public class UserTestData {
             .userAuthority(USER_TEST_USER_AUTHORITY)
             .build();
 
+    public static User getCloneUser() {
+        return USER_TEST.clone();
+    }
+
     public static final String ADMIN_TEST_NAME = "어드민";
     public static final String ADMIN_TEST_EMAIL = "admin@test.com";
     public static final String ADMIN_TEST_IMAGE_URL = "testAdminImageUrl";
@@ -34,7 +38,7 @@ public class UserTestData {
     public static final String ADMIN_TEST_PROVIDER_ID = "testAdminProviderId";
     public static final UserAuthority ADMIN_TEST_USER_AUTHORITY = UserAuthority.ROLE_ADMIN;
 
-    public static final User ADMIN_TEST = User.builder()
+    private static final User ADMIN_TEST = User.builder()
             .name(ADMIN_TEST_NAME)
             .email(ADMIN_TEST_EMAIL)
             .imageUrl(ADMIN_TEST_IMAGE_URL)
@@ -44,4 +48,8 @@ public class UserTestData {
             .providerId(ADMIN_TEST_PROVIDER_ID)
             .userAuthority(ADMIN_TEST_USER_AUTHORITY)
             .build();
+
+    public static User getCloneAdmin() {
+        return ADMIN_TEST.clone();
+    }
 }

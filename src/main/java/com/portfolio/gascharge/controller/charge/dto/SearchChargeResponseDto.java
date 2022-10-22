@@ -1,6 +1,7 @@
 package com.portfolio.gascharge.controller.charge.dto;
 
 import com.portfolio.gascharge.domain.charge.Charge;
+import com.portfolio.gascharge.enums.charge.ChargePlaceMembership;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,13 +16,15 @@ public class SearchChargeResponseDto {
     private String name;
     private Long totalCount;
     private Long currentCount;
+    private ChargePlaceMembership membership;
 
     @Builder
-    public SearchChargeResponseDto(String chargePlaceId, String name, Long totalCount, Long currentCount) {
+    public SearchChargeResponseDto(String chargePlaceId, String name, Long totalCount, Long currentCount, ChargePlaceMembership membership) {
         this.chargePlaceId = chargePlaceId;
         this.name = name;
         this.totalCount = totalCount;
         this.currentCount = currentCount;
+        this.membership = membership;
     }
 
     public static SearchChargeResponseDto toResponseDto(Charge charge) {
@@ -30,6 +33,7 @@ public class SearchChargeResponseDto {
                 .name(charge.getName())
                 .totalCount(charge.getTotalCount())
                 .currentCount(charge.getCurrentCount())
+                .membership(charge.getMembership())
                 .build();
     }
 }

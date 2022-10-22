@@ -24,7 +24,7 @@ import java.util.List;
         @UniqueConstraint(columnNames = {"USER_ID", "email"})
 })
 @DynamicInsert
-public class User {
+public class User implements Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,5 +73,15 @@ public class User {
         this.provider = provider;
         this.providerId = providerId;
         this.userAuthority = userAuthority;
+    }
+
+    @Override
+    public User clone() {
+        try {
+            return (User) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 }
