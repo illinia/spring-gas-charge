@@ -28,7 +28,7 @@ import static com.portfolio.gascharge.domain.user.UserTestData.USER_TEST_EMAIL;
 
 @Component
 @Transactional
-@Profile("default")
+@Profile({"default", "real"})
 public class InitPostConstruct {
     @Autowired
     private UserRepository userRepository;
