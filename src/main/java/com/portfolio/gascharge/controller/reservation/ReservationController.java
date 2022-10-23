@@ -103,9 +103,9 @@ public class ReservationController {
             @PathVariable @NotBlank String reservationValidationId) {
         Reservation reservation = reservationService.findByReservationId(reservationValidationId);
 
-        GetReservationResponseDto postReserveResponseDto = GetReservationResponseDto.toResponseDto(reservation);
+        GetReservationResponseDto getReservationResponseDto = GetReservationResponseDto.toResponseDto(reservation);
 
-        return new ResponseEntity(postReserveResponseDto, HttpStatus.OK);
+        return new ResponseEntity(getReservationResponseDto, HttpStatus.OK);
     }
 
     @ApiOperation(

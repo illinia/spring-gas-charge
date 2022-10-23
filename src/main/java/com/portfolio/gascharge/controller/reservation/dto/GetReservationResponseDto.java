@@ -1,5 +1,6 @@
 package com.portfolio.gascharge.controller.reservation.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.portfolio.gascharge.domain.reservation.Reservation;
 import com.portfolio.gascharge.enums.reservation.ReservationStatus;
 import lombok.Builder;
@@ -12,6 +13,7 @@ public class GetReservationResponseDto {
     private String reservationId;
     private String userEmail;
     private String chargePlaceId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime reserveTime;
     private ReservationStatus status;
 
