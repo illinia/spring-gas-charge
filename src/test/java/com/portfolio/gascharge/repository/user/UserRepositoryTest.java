@@ -3,8 +3,6 @@ package com.portfolio.gascharge.repository.user;
 import com.portfolio.gascharge.domain.user.User;
 import com.portfolio.gascharge.domain.user.UserTestData;
 import com.portfolio.gascharge.domain.user.search.UserSearchStatus;
-import com.portfolio.gascharge.enums.user.UserAuthority;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,11 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional

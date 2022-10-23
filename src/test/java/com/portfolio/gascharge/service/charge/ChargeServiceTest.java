@@ -1,13 +1,10 @@
 package com.portfolio.gascharge.service.charge;
 
-import com.portfolio.gascharge.controller.charge.dto.UpdateChargeRequestDto;
 import com.portfolio.gascharge.domain.charge.Charge;
 import com.portfolio.gascharge.domain.charge.ChargeTestData;
 import com.portfolio.gascharge.domain.charge.search.ChargeSearchStatus;
 import com.portfolio.gascharge.error.exception.jpa.NoEntityFoundException;
 import com.portfolio.gascharge.repository.charge.ChargeRepository;
-import com.portfolio.gascharge.utils.web.DtoFieldSpreader;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

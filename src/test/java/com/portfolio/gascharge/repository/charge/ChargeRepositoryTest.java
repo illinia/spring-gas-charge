@@ -3,8 +3,6 @@ package com.portfolio.gascharge.repository.charge;
 import com.portfolio.gascharge.domain.charge.Charge;
 import com.portfolio.gascharge.domain.charge.search.ChargeSearchStatus;
 import com.portfolio.gascharge.enums.charge.ChargePlaceMembership;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.portfolio.gascharge.utils.DateTimeFormat.formatter;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
