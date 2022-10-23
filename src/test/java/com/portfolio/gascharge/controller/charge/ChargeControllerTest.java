@@ -27,11 +27,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +37,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(
@@ -178,7 +175,7 @@ public class ChargeControllerTest {
     @Test
     void getChargeByChargePlaceId() throws Exception {
         // given
-        Charge testCharge1 = ChargeTestData.getTestCharge1();
+        Charge testCharge1 = ChargeTestData.getTestCharge();
 
         // when
         when(chargeService.findByChargePlaceId(anyString())).thenReturn(testCharge1);
@@ -196,7 +193,7 @@ public class ChargeControllerTest {
     @Test
     void addCharge() throws Exception {
         // given
-        Charge testCharge1 = ChargeTestData.getTestCharge1();
+        Charge testCharge1 = ChargeTestData.getTestCharge();
         AddChargeRequestDto addChargeRequestDto = new AddChargeRequestDto();
         addChargeRequestDto.setChargePlaceId(testCharge1.getChargePlaceId());
         addChargeRequestDto.setName(testCharge1.getName());
@@ -221,7 +218,7 @@ public class ChargeControllerTest {
     @Test
     void updateCharge() throws Exception {
         // given
-        Charge testCharge1 = ChargeTestData.getTestCharge1();
+        Charge testCharge1 = ChargeTestData.getTestCharge();
         String chargePlaceId = testCharge1.getChargePlaceId();
 
         UpdateChargeRequestDto updateChargeRequestDto = new UpdateChargeRequestDto();

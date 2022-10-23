@@ -73,7 +73,7 @@ public class ReservationControllerTest {
                 .setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver(UserTestData.getCloneAdmin()), new PageableHandlerMethodArgumentResolver())
                 .build();
 
-        Charge charge = ChargeTestData.getTestCharge1();
+        Charge charge = ChargeTestData.getTestCharge();
         LocalDateTime now = LocalDateTime.now().plusDays(1);
 
         this.reservationTestAdmin = Reservation.builder()
@@ -184,7 +184,7 @@ public class ReservationControllerTest {
         // given
 
         // when
-        when(reservationService.findByReservationId(this.reservationTestAdmin.getReservationValidationId())).thenReturn(this.reservationTestAdmin);
+        when(reservationService.findByReservationValidationId(this.reservationTestAdmin.getReservationValidationId())).thenReturn(this.reservationTestAdmin);
 
         // then
         mvc.perform(get("/reservation/" + this.reservationTestAdmin.getReservationValidationId()))

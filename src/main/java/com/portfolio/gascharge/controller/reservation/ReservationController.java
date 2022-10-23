@@ -51,7 +51,7 @@ public class ReservationController {
             @CurrentUser UserPrincipal userPrincipal,
             @RequestBody @Valid PostReserveRequestDto requestDto) {
 
-        Reservation reserve = reservationService.reserve(userPrincipal.getId(), requestDto.getChargePlaceId(), requestDto.getTime());
+        Reservation reserve = reservationService.reserve(userPrincipal.getEmail(), requestDto.getChargePlaceId(), requestDto.getTime());
 
         PostReserveResponseDto responseDto = PostReserveResponseDto.toResponseDto(reserve);
 
@@ -101,7 +101,7 @@ public class ReservationController {
     @GetMapping("/{reservationValidationId}")
     public ResponseEntity getById(
             @PathVariable @NotBlank String reservationValidationId) {
-        Reservation reservation = reservationService.findByReservationId(reservationValidationId);
+        Reservation reservation = reservationService.findByReservationValidationId(reservationValidationId);
 
         GetReservationResponseDto getReservationResponseDto = GetReservationResponseDto.toResponseDto(reservation);
 

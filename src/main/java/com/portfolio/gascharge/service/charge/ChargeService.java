@@ -56,11 +56,6 @@ public class ChargeService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Charge> findAll(Pageable pageable) {
-        return chargeRepository.findAll(pageable);
-    }
-
-    @Transactional(readOnly = true)
     public Page<Charge> findAll(ChargeSearchStatus chargeSearchStatus, Pageable pageable) {
 
         return chargeRepository.findChargeWithSearchStatus(chargeSearchStatus, pageable);

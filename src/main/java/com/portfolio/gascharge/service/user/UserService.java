@@ -20,11 +20,11 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public User findById(Long id) {
-        Optional<User> byId = userRepository.findById(id);
+    public User findByEmail(String email) {
+        Optional<User> byId = userRepository.findByEmail(email);
 
         if (byId.isEmpty()) {
-            throw new NoEntityFoundException(User.class, id.toString());
+            throw new NoEntityFoundException(User.class, email);
         }
 
         return byId.get();

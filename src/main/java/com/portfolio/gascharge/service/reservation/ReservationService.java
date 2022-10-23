@@ -29,11 +29,11 @@ public class ReservationService {
     private final ChargeRepository chargeRepository;
     private final ReservationRepository reservationRepository;
 
-    public Reservation reserve(Long userId, String chargePlaceId, LocalDateTime time) {
-        Optional<User> byUserId = userRepository.findById(userId);
+    public Reservation reserve(String email, String chargePlaceId, LocalDateTime time) {
+        Optional<User> byUserId = userRepository.findByEmail(email);
 
         if (byUserId.isEmpty()) {
-            throw new NoEntityFoundException(User.class, userId.toString());
+            throw new NoEntityFoundException(User.class, email);
         }
 
         Optional<Charge> byChargeId = chargeRepository.findByChargePlaceId(chargePlaceId);
@@ -98,11 +98,11 @@ public class ReservationService {
     }
 
     @Transactional(readOnly = true)
-    public Reservation findByReservationId(String id) {
-        Optional<Reservation> byId = reservationRepository.findByReservationValidationId(id);
+    public Reservation findByReservationValidationId(String reservationValidationId) {
+        Optional<Reservation> byId = reservationRepository.findByReservationValidationId(reservationValidationId);
 
         if (byId.isEmpty()) {
-            throw new NoEntityFoundException(Reservation.class, id);
+            throw new NoEntityFoundException(Reservation.class, reservationValidationId);
         }
 
         return byId.get();

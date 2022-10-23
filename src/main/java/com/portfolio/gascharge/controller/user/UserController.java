@@ -47,7 +47,7 @@ public class UserController {
     @GetMapping("/me")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
-        User user = userService.findById(userPrincipal.getId());
+        User user = userService.findByEmail(userPrincipal.getEmail());
 
         return new ResponseEntity(GetUserCurrentResponse.toResponseDto(user), HttpStatus.OK);
     }
