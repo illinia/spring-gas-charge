@@ -1,0 +1,87 @@
+version: "3.7"
+
+services:
+  # gas-charge-db:
+  #   container_name: gas-charge-db
+  #   image: gas-charge-h2:0.1.0
+  #   ports:
+  #     - 1521:1521
+  #     - 8091:81
+  #   deploy:
+  #     replicas: 1
+  #     update_config:
+  #       monitor: 10s
+  #       failure_action: rollback
+  #   restart: unless-stopped
+  #   environment:
+  #     H2_OPTIONS: -ifNotExists
+  #   networks:
+  #     - gas-charge-net
+
+  gas-charge-batch:
+    image:  registry.local:5000/gas-charge/batch:v1
+    ports:
+      - "8092:8092"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        monitor: 20s
+        failure_action: rollback
+        order: start-first
+    environment:
+      DB_URL: jdbc:h2:tcp://host.docker.internal:1521/~/gas-charge;MODE=MYSQL
+    networks:
+      - gas-charge-net
+
+  gas-charge-services:
+    # container_name: gas-charge-services
+    image: registry.local:5000/gas-charge/services:v1
+    # image: gas-charge-services:0.1.0
+    ports:
+      - "8091:8091"
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        monitor: 20s
+        failure_action: rollback
+        order: start-first
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    environment:
+      DB_URL: jdbc:h2:tcp://host.docker.internal:1521/~/gas-charge;MODE=MYSQL
+      # MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health,prometheus"
+    # depends_on:
+    #   - gas-charge-db
+    networks:
+      - gas-charge-net
+
+  gas-charge-user:
+    # container_name: gas-charge-user
+    image: registry.local:5000/gas-charge/user:v1
+    # image: gas-charge-user:0.1.0
+    ports:
+      - "8090:8090"
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        monitor: 10s
+        failure_action: rollback
+        order: start-first
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    environment:
+      SERVICES_URL: http://gas-charge-services:8091
+      DB_URL: jdbc:h2:tcp://host.docker.internal:1521/~/gas-charge;MODE=MYSQL
+      # MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health,prometheus"
+    depends_on:
+      - gas-charge-services
+      # - gas-charge-db
+    networks: 
+      - gas-charge-net
+    
+networks:
+  gas-charge-net:
+    name: gas-charge-net
